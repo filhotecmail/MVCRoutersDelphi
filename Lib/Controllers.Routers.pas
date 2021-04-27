@@ -9,8 +9,10 @@ interface
 
   type TControllerName=  String;
   type TInstanceName = String;
-  Type TControllersRoute = class
   Type TRouterType = (Controller,Model,View);
+
+  Type TControllersRoute = class
+   Type TConstructorParams = Array of TValue;
   strict private
     FviewName: string;
    private
@@ -18,12 +20,14 @@ interface
     FControllerName: STring;
     FControllerObj: TPersistentClass;
   private
+
      function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
-           ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TControllersRoute; overload;
+           ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TValue; overload;
   public
-    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareName: String = '' ):TValue; Overload;
-    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
-     ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType; AMidleWareName: String = ''): TControllersRoute; Overload;
+    //function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareName: String = '' ):TValue; Overload;
+    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean = False;
+     ConstrutorName: String= ''; AConstructorParam: TConstructorParams = nil;
+     ARouterType:TRouterType= Controller; AMidleWareName: String = ''): TValue; Overload;
     function RegisterRouters( ASourceController: TPersistentClass; AControllerAlias: String ):TControllersRoute; overload;
     function FreeRoute(const AClassName: String):TControllersRoute;
     procedure AfterConstruction; override;
@@ -71,41 +75,52 @@ begin
  RegisterClassAlias(ASourceController,AControllerAlias);
 end;
 
-function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue; AMidleWareName: String = ''): TValue;
-var FClass: TPersistentClass;
-     RttiContext: TRttiContext;
-     RttiInstanceType: TRttiInstanceType;
-     RttiMethod: TRttiMethod;
-     Instance: TValue;
+function TControllersRoute.Route(const AClassName: String; Method: String;
+  AParams: array of TValue; AConstrutor: Boolean; ConstrutorName: String;
+  AConstructorParam: TConstructorParams; ARouterType: TRouterType;
+  AMidleWareName: String): TValue;
+  var FMidleware: TObject;
 begin
-  Result:= Self;
   if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
-    Assert( TMidlwareRoute(GetClass(AMidleWareName)).IsValidate,TMidlwareRoute(GetClass(AMidleWareName)).MsgnotValidate);
-
-  Assert( GetClass(AClassName) <> nil,'Nenhuma rota encontrada com o nome de '+AClassName+'!');
-  if not ( FRoutersInstance.Items[AClassName].IsEmpty ) then
   begin
-    FClass:= GetClass(AClassName);
-    RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-    RttiMethod := RttiInstanceType.GetMethod(Method);
-    RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
-  end else
-  raise Exception.Create('Utilize o Método Construtor da Rota');
-end;
-
-function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue;
-  AConstrutor: Boolean; ConstrutorName: String; AParamsConstructor: array of TValue; ARouterType:TRouterType; AMidleWareName: String = ''): TControllersRoute;
-begin
-  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
-    Assert( TMidlwareRoute(GetClass(AMidleWareName)).IsValidate,TMidlwareRoute(GetClass(AMidleWareName)).MsgnotValidate);
+    FMidleware:= TObject(GetClass(AMidleWareName).Create);
+   try
+    Assert( TMidlwareRoute(FMidleware).IsValidate,
+            TMidlwareRoute(FMidleware).MsgnotValidate);
+   finally
+    FreeAndNil(FMidleware);
+   end;
+  end;
  if GetClass(AClassName) <> nil then
-  Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AParamsConstructor,ARouterType)
+  Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AConstructorParam,ARouterType)
   else
   raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
 end;
 
+//function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue; AMidleWareName: String = ''): TValue;
+//var FClass: TPersistentClass;
+//     RttiContext: TRttiContext;
+//     RttiInstanceType: TRttiInstanceType;
+//     RttiMethod: TRttiMethod;
+//     Instance: TValue;
+//begin
+//  Result:= Self;
+//  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
+//    Assert( TMidlwareRoute(GetClass(AMidleWareName)).IsValidate,TMidlwareRoute(GetClass(AMidleWareName)).MsgnotValidate);
+//
+//  Assert( GetClass(AClassName) <> nil,'Nenhuma rota encontrada com o nome de '+AClassName+'!');
+//  if not ( FRoutersInstance.Items[AClassName].IsEmpty ) then
+//  begin
+//    FClass:= GetClass(AClassName);
+//    RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
+//    RttiMethod := RttiInstanceType.GetMethod(Method);
+//    RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
+//  end else
+//  raise Exception.Create('Utilize o Método Construtor da Rota');
+//end;
+
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
-  ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TControllersRoute;
+  ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TValue;
  var FClass: TPersistentClass;
      RttiContext: TRttiContext;
      RttiInstanceType: TRttiInstanceType;
@@ -122,9 +137,13 @@ begin
                  RttiMethod := RttiInstanceType.GetMethod(ConstrutorName);
                  Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor);
                  FRoutersInstance.Add(AClassName,Instance);
-                end;
                  RttiMethod := RttiInstanceType.GetMethod(Method);
-                 RttiMethod.Invoke(Instance, AParams);
+                 RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
+                end else
+                begin
+                 RttiMethod := RttiInstanceType.GetMethod(Method);
+                 RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
+                end;
               end;
   Model: ;
 
