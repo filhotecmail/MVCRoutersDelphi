@@ -54,7 +54,8 @@ begin
   FreeAndNil( FRoutersInstance );
 end;
 
-function TControllersRoute.RegisterRouters(ASourceController: TPersistentClass; AControllerAlias: String): TControllersRoute;
+function TControllersRoute.RegisterRouters(ASourceController: TPersistentClass;
+  AControllerAlias: String): TControllersRoute;
 begin
  RegisterClassAlias(ASourceController,AControllerAlias);
 end;
@@ -109,31 +110,9 @@ begin
                  RttiMethod := RttiInstanceType.GetMethod(Method);
                  RttiMethod.Invoke(Instance, AParams);
               end;
-  Model: begin
-          FClass:= GetClass(AClassName);
-          RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-          if AConstrutor then
-          begin
-           RttiMethod := RttiInstanceType.GetMethod(ConstrutorName);
-           Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor);
-           FRoutersInstance.Add(AClassName,Instance);
-          end;
-           RttiMethod := RttiInstanceType.GetMethod(Method);
-           RttiMethod.Invoke(Instance, AParams);
-         end;
+  Model: ;
 
-  View: begin
-          FClass:= GetClass(AClassName);
-          RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-          if AConstrutor then
-          begin
-           RttiMethod := RttiInstanceType.GetMethod(ConstrutorName);
-           Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor);
-           FRoutersInstance.Add(AClassName,Instance);
-          end;
-           RttiMethod := RttiInstanceType.GetMethod(Method);
-           RttiMethod.Invoke(Instance, AParams);
-         end;
+  View: ;
  end;
 end;
 
