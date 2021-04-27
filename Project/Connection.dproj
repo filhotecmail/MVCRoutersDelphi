@@ -117,6 +117,7 @@
             <Form>FVisaoCliente</Form>
         </DCCReference>
         <DCCReference Include="..\Lib\Controllers.Routers.ObjectConcrete.pas"/>
+        <DCCReference Include="..\Lib\Routers.Auth.Midleware.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

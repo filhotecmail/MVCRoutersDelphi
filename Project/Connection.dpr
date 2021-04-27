@@ -10,7 +10,8 @@ uses
   Clientes.Controller in '..\Testes\Clientes.Controller.pas',
   Cliente.routers in '..\Testes\Cliente.routers.pas',
   Clientes.view in '..\Testes\Clientes.view.pas' {FVisaoCliente},
-  Controllers.Routers.ObjectConcrete in '..\Lib\Controllers.Routers.ObjectConcrete.pas';
+  Controllers.Routers.ObjectConcrete in '..\Lib\Controllers.Routers.ObjectConcrete.pas',
+  Routers.Auth.Midleware in '..\Lib\Routers.Auth.Midleware.pas';
 
 {$R *.res}
 begin

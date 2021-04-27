@@ -13,19 +13,22 @@ interface
 
   Type TControllersRoute = class
    Type TConstructorParams = Array of TValue;
+   Type TMidlewares = TArray<String>;
   strict private
     FviewName: string;
    private
     FControllersForView: TDictionary<TControllerName,TPersistentClass>;
     FControllerName: STring;
     FControllerObj: TPersistentClass;
+    procedure CheckMidlewares(const AMidlewares: TMidlewares);
   private
     function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
            ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TValue; overload;
   public
-    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean = False;
-     ConstrutorName: String= ''; AConstructorParam: TConstructorParams = nil;
-     ARouterType:TRouterType= Controller; AMidleWareName: String = ''): TValue; Overload;
+    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareNames: TMidlewares = nil): TValue; overload;
+    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
+     ConstrutorName: String; AConstructorParam: TConstructorParams;
+     ARouterType:TRouterType; AMidleWareNames: TMidlewares = nil): TValue; Overload;
     function RegisterRouters( ASourceController: TPersistentClass; AControllerAlias: String ):TControllersRoute; overload;
     function FreeRoute(const AClassName: String):TControllersRoute;
     procedure AfterConstruction; override;
@@ -67,6 +70,25 @@ begin
   FreeAndNil( FRoutersInstance );
 end;
 
+procedure TControllersRoute.CheckMidlewares(const AMidlewares: TMidlewares);
+ var FMidleware: TObject;
+      I: integer;
+begin
+  if ( AMidlewares <> nil ) and ( length(AMidlewares)> 0 ) then
+  begin
+    for I := Low(AMidlewares) to High(AMidlewares) do
+    begin
+      FMidleware:= TObject(GetClass(AMidlewares[I]).Create);
+     try
+      Assert( TMidlwareRoute(FMidleware).IsValidate,
+              TMidlwareRoute(FMidleware).MsgnotValidate);
+     finally
+      FreeAndNil(FMidleware);
+     end;
+    end;
+  end;
+end;
+
 function TControllersRoute.RegisterRouters(ASourceController: TPersistentClass;
   AControllerAlias: String): TControllersRoute;
 begin
@@ -74,21 +96,17 @@ begin
 end;
 
 function TControllersRoute.Route(const AClassName: String; Method: String;
+  AParams: array of TValue; AMidleWareNames: TMidlewares): TValue;
+begin
+  Result := route(AClassName,Method,AParams,False,'',[],Controller,AMidleWareNames);
+end;
+
+function TControllersRoute.Route(const AClassName: String; Method: String;
   AParams: array of TValue; AConstrutor: Boolean; ConstrutorName: String;
   AConstructorParam: TConstructorParams; ARouterType: TRouterType;
-  AMidleWareName: String): TValue;
-  var FMidleware: TObject;
+  AMidleWareNames: TMidlewares): TValue;
 begin
-  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
-  begin
-    FMidleware:= TObject(GetClass(AMidleWareName).Create);
-   try
-    Assert( TMidlwareRoute(FMidleware).IsValidate,
-            TMidlwareRoute(FMidleware).MsgnotValidate);
-   finally
-    FreeAndNil(FMidleware);
-   end;
-  end;
+  CheckMidlewares(AMidleWareNames);
  if GetClass(AClassName) <> nil then
   Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AConstructorParam,ARouterType)
   else

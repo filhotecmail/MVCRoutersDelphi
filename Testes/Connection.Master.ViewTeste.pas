@@ -38,8 +38,8 @@ end;
 
 procedure TForm24.btn4Click(Sender: TObject);
 begin
- RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,'Auth');
- RoutersController.Route('/Clientes','Submit',[],'Auth');
+ RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,['Auth']);
+ RoutersController.Route('/Clientes','Submit',[],['Auth']);
 end;
 
 procedure TForm24.btn5Click(Sender: TObject);
