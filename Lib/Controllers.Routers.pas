@@ -20,11 +20,9 @@ interface
     FControllerName: STring;
     FControllerObj: TPersistentClass;
   private
-
-     function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
+    function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
            ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TValue; overload;
   public
-    //function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareName: String = '' ):TValue; Overload;
     function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean = False;
      ConstrutorName: String= ''; AConstructorParam: TConstructorParams = nil;
      ARouterType:TRouterType= Controller; AMidleWareName: String = ''): TValue; Overload;
@@ -96,28 +94,6 @@ begin
   else
   raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
 end;
-
-//function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue; AMidleWareName: String = ''): TValue;
-//var FClass: TPersistentClass;
-//     RttiContext: TRttiContext;
-//     RttiInstanceType: TRttiInstanceType;
-//     RttiMethod: TRttiMethod;
-//     Instance: TValue;
-//begin
-//  Result:= Self;
-//  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
-//    Assert( TMidlwareRoute(GetClass(AMidleWareName)).IsValidate,TMidlwareRoute(GetClass(AMidleWareName)).MsgnotValidate);
-//
-//  Assert( GetClass(AClassName) <> nil,'Nenhuma rota encontrada com o nome de '+AClassName+'!');
-//  if not ( FRoutersInstance.Items[AClassName].IsEmpty ) then
-//  begin
-//    FClass:= GetClass(AClassName);
-//    RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-//    RttiMethod := RttiInstanceType.GetMethod(Method);
-//    RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
-//  end else
-//  raise Exception.Create('Utilize o Método Construtor da Rota');
-//end;
 
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
   ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TValue;
