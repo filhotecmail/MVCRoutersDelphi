@@ -21,7 +21,7 @@ A fachada é trocada entre clientes e o subsistema. Ele "encapsula" o subsistema
     
               
                Function Pagar( PValor: Currency ):TJsonObject;
-               Fuction MostrarSaldo( IdCliente: Intege ):TJsonObject;
+               Fuction MostrarSaldo( IdCliente: Integer ):TJsonObject;
 
    Bom nesse caso apresentado acima, as duas funções representam de forma simples e objetiva, concisa o que elas representam e o que elas fazem, porém e se precisássemos expor mais que apenas funções ou métodos. Poderíamos por exemplo representar nossos controles de pagamento.
          
