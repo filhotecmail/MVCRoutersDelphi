@@ -34,7 +34,7 @@ No final podemos dar um apelido, menos complexo e mais amigável á rota, deixan
   A Grande vantagem disso em nosso mundo Delphi, podemos utilizar a biblioteca RTTI para mapear as classes e os Objetos e poder reduzir o acoplamento, aqueles monte de uses onde todo mundo conhece todo mundo.
   Bom a idéa é , contruir um sistema MVC, Onde Nossas Rotas serão publicáveis em um Grande Facade para a aplicação.
 
-#MVC- Motivação.
+# MVC- Motivação.
   A idéia original é construirmos a Arquitetura do problema dentro da camada MVC, tenho a premissa de entregar um sistema completo para criação e registros das rotas , o Facade , o Controller e o Model, e fazer com que eles não se conheçam.
 
  O que é o MVC. 
