@@ -35,17 +35,6 @@ interface
     procedure BeforeDestruction; override;
   end;
 
-  type TMidlwareRoute = Class Abstract(TPersistent)
-  strict private
-    FIsValidate: Boolean;
-    FMsgnotValidate: String;
-    procedure SetIsValidate(const Value: Boolean);
-    procedure SetMsgnotValidate(const Value: String);
-  published
-    property IsValidate: Boolean read FIsValidate write SetIsValidate;
-    property Msg: String read FMsgnotValidate write SetMsgnotValidate;
-  end;
-
   var RoutersController:TControllersRoute;
 
 implementation
@@ -81,7 +70,7 @@ begin
       FMidleware:= TObject(GetClass(AMidlewares[I]).Create);
      try
       Assert( TMidlwareRoute(FMidleware).IsValidate,
-              TMidlwareRoute(FMidleware).MsgnotValidate);
+              TMidlwareRoute(FMidleware).Msg);
      finally
       FreeAndNil(FMidleware);
      end;
@@ -153,20 +142,8 @@ begin
  FRoutersInstance.Remove(AClassName);
 end;
 
- { TMidlwareRoute }
-
-procedure TMidlwareRoute.SetIsValidate(const Value: Boolean);
-begin
-  FIsValidate := Value;
-end;
-
-procedure TMidlwareRoute.SetMsgnotValidate(const Value: String);
-begin
-  FMsgnotValidate := Value;
-end;
-
-initialization
-
+ initialization
+ //
  Finalization
  FreeAndNil( RoutersController );
 

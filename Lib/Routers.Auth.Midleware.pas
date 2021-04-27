@@ -2,7 +2,7 @@ unit Routers.Auth.Midleware;
 
 interface
 
-uses System.classes,System.Generics.Collections,System.Generics.Defaults, Rtti, Controllers.Routers;
+uses System.classes,Routers.Midleware.Abstract;
 
   type TAuthMidleware = Class(TMidlwareRoute)
    private
