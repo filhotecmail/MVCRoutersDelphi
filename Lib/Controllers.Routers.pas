@@ -43,7 +43,7 @@ interface
     procedure SetMsgnotValidate(const Value: String);
   published
     property IsValidate: Boolean read FIsValidate write SetIsValidate;
-    property MsgnotValidate: String read FMsgnotValidate write SetMsgnotValidate;
+    property Msg: String read FMsgnotValidate write SetMsgnotValidate;
   end;
 
   var RoutersController:TControllersRoute;

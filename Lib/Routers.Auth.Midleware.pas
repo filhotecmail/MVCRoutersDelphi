@@ -24,7 +24,7 @@ begin
    // Executar a Lógica
    FUsername := 'Adriano';
    FPassWord := '1234';
-   MsgnotValidate:= 'Usuário não autenticado';
+   Msg:= 'Usuário não autenticado';
    IsValidate := (( FUsername = 'Carlos') and (  FPassWord = '1234' ) );
 end;
 
