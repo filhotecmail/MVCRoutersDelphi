@@ -2,9 +2,9 @@ unit Routers.Auth.Midleware;
 
 interface
 
-uses System.classes,Routers.Midleware.Abstract;
+uses System.classes,Routers.Middleware.Abstract;
 
-  type TAuthMidleware = Class(TMidlwareRoute)
+  type TAuthMiddleware = Class(TMiddlwareRoute)
    private
     FUsername: string;
     FPassWord: String;
@@ -18,7 +18,7 @@ implementation
 
  { TAuthMidleware }
 
-procedure TAuthMidleware.AfterConstruction;
+procedure TAuthMiddleware.AfterConstruction;
 begin
   inherited;
    // Executar a Lógica
@@ -28,14 +28,14 @@ begin
    IsValidate := (( FUsername = 'Carlos') and (  FPassWord = '1234' ) );
 end;
 
-procedure TAuthMidleware.BeforeDestruction;
+procedure TAuthMiddleware.BeforeDestruction;
 begin
   inherited;
 
 end;
 
 initialization
- RegisterClassAlias(TAuthMidleware,'Auth');
+ RegisterClassAlias(TAuthMiddleware,'Auth');
  Finalization
- UnRegisterClass( TAuthMidleware );
+ UnRegisterClass( TAuthMiddleware );
 end.

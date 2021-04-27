@@ -12,7 +12,7 @@ uses
   Clientes.view in '..\Testes\App\Views\Clientes.view.pas' {FVisaoCliente},
   Controllers.Routers.ObjectConcrete in '..\Lib\Controllers.Routers.ObjectConcrete.pas',
   Routers.Auth.Midleware in '..\Testes\App\midlewares\Routers.Auth.Midleware.pas',
-  Routers.Midleware.Abstract in '..\Lib\Routers.Midleware.Abstract.pas';
+  Routers.Middleware.Abstract in '..\Lib\Routers.Middleware.Abstract.pas';
 
 {$R *.res}
 begin

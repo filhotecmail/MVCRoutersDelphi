@@ -1,9 +1,9 @@
-unit Routers.Midleware.Abstract;
+unit Routers.Middleware.Abstract;
 
 interface
   uses System.classes;
 
-  type TMidlwareRoute = Class Abstract(TPersistent)
+  type TMiddlwareRoute = Class Abstract(TPersistent)
   strict private
     FIsValidate: Boolean;
     FMsgnotValidate: String;
@@ -16,12 +16,12 @@ interface
 
 implementation
  { TMidlwareRoute }
-procedure TMidlwareRoute.SetIsValidate(const Value: Boolean);
+procedure TMiddlwareRoute.SetIsValidate(const Value: Boolean);
 begin
   FIsValidate := Value;
 end;
 
-procedure TMidlwareRoute.SetMsgnotValidate(const Value: String);
+procedure TMiddlwareRoute.SetMsgnotValidate(const Value: String);
 begin
   FMsgnotValidate := Value;
 end;
