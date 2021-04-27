@@ -11,7 +11,8 @@ uses
   Cliente.routers in '..\Testes\Cliente.routers.pas',
   Clientes.view in '..\Testes\Clientes.view.pas' {FVisaoCliente},
   Controllers.Routers.ObjectConcrete in '..\Lib\Controllers.Routers.ObjectConcrete.pas',
-  Routers.Auth.Midleware in '..\Lib\Routers.Auth.Midleware.pas';
+  Routers.Auth.Midleware in '..\Testes\Routers.Auth.Midleware.pas',
+  Routers.Midleware.Abstract in '..\Lib\Routers.Midleware.Abstract.pas';
 
 {$R *.res}
 begin
