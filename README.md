@@ -127,10 +127,7 @@ type TAuthMidleware = Class(TMidlwareRoute)
   End;
 
 implementation
-
-
- { TAuthMidleware }
-
+{ TAuthMidleware }
 procedure TAuthMidleware.AfterConstruction;
 begin
   inherited;
@@ -138,11 +135,9 @@ begin
    MsgnotValidate:= 'Usuário não autenticado';
    IsValidate := (( FUsername = 'Carlos') and (  FPassWord = '1234' ) );
 end;
-
 procedure TAuthMidleware.BeforeDestruction;
 begin
   inherited;
-
 end;
 
 initialization
