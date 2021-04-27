@@ -52,7 +52,7 @@ end;
 procedure TClientesController.Render;
 begin
  ShowMessage('Teste');
- RoutersController.Route('/ClientesView','Render',FCallObj,True,'Create',[nil],View);
+ RoutersController.Route('/ClientesView','Render',FCallObj,True,'Create',[nil],Controller);
 end;
 
 procedure TClientesController.Submit;

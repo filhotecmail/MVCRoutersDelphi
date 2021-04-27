@@ -28,10 +28,7 @@ uses
   Controllers.Routers;
 
 {$R *.dfm}
-
-
 { TFVisaoCliente }
-
 procedure TFVisaoCliente.AfterConstruction;
 begin
   inherited;
