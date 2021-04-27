@@ -33,6 +33,20 @@ No final podemos dar um apelido, menos complexo e mais amigável á rota, deixan
 
   A Grande vantagem disso em nosso mundo Delphi, podemos utilizar a biblioteca RTTI para mapear as classes e os Objetos e poder reduzir o acoplamento, aqueles monte de uses onde todo mundo conhece todo mundo.
   Bom a idéa é , contruir um sistema MVC, Onde Nossas Rotas serão publicáveis em um Grande Facade para a aplicação.
+
+# MVC- Motivação.
+  A idéia original é construirmos a Arquitetura do problema dentro da camada MVC, tenho a premissa de entregar um sistema completo para criação e registros das rotas , o Facade , o Controller e o Model, e fazer com que eles não se conheçam.
+
+ O que é o MVC. 
+   O padrão MVC representa o padrão Model-View-Controller (model-view-controller). Este modo é usado para desenvolvimento hierárquico de aplicativos.
+
+Modelo - O modelo representa um objeto ou JAVA POJO que acessa os dados. Também pode ter lógica para atualizar o controlador quando os dados mudam.
+Visualização - uma visualização representa uma visualização dos dados contidos no modelo.
+Controlador - O controlador atua no modelo e na visualização. Ele controla o fluxo de dados para modelar objetos e atualiza a visualização quando os dados são alterados. Ele separa a vista do modelo.
+
+![image](https://user-images.githubusercontent.com/18727307/116269556-b6268000-a754-11eb-852b-65c7165227ea.png)
+
+
   Vamos ver na prática!
 
 # ObjectPascal-DELPHI
@@ -146,18 +160,12 @@ initialization
  UnRegisterClass( TAuthMidleware );
 end.
 ```
-E Adicionando o midleware na rota.
 
+Passando Array de Midlewares par verifição nas rotas.
 ```Delphi
- RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,'Auth');
- RoutersController.Route('/Clientes','Submit',[],'Auth');
+ RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,['Auth']);
+ RoutersController.Route('/Clientes','Submit',[],['Auth']);
 ```
-Com alguns ajustes temos uma nova rota mais simplificada.
-```Delphi
- RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,'Auth');
- RoutersController.Route('/Clientes','Submit',[],'Auth');
-```
-
 
     
 
