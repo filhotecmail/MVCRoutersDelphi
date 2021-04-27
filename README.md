@@ -146,18 +146,12 @@ initialization
  UnRegisterClass( TAuthMidleware );
 end.
 ```
-E Adicionando o midleware na rota.
 
+Passando Array de Midlewares par verifição nas rotas.
 ```Delphi
- RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,'Auth');
- RoutersController.Route('/Clientes','Submit',[],'Auth');
+ RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,['Auth']);
+ RoutersController.Route('/Clientes','Submit',[],['Auth']);
 ```
-Com alguns ajustes temos uma nova rota mais simplificada.
-```Delphi
- RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,'Auth');
- RoutersController.Route('/Clientes','Submit',[],'Auth');
-```
-
 
     
 
