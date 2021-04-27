@@ -5,7 +5,7 @@ interface
   System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
   FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, Data.DB, FireDAC.Comp.Client,Rtti,
-  System.Generics.Collections,System.Generics.Defaults, Json,Vcl.Forms,Database.IInterfaces;
+  System.Generics.Collections,System.Generics.Defaults, Json,Vcl.Forms;
 
   type TControllerName=  String;
   type TInstanceName = String;
@@ -85,7 +85,7 @@ begin
  if GetClass(AClassName) <> nil then
   Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AParamsConstructor,ARouterType)
   else
-  raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName+'!');
+  raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
 end;
 
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;

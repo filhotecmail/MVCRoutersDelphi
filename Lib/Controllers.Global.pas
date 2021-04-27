@@ -18,7 +18,7 @@ uses
   RoutersController.RegisterRouters(TFVisaoCliente,'/ClientesView');
  end;
   Initialization
-  RoutersController := TControllersRoute.Create;
+   RoutersController := TControllersRoute.Create;
   RegisterControllers;
   finalization
   FreeAndNil( RoutersController );

@@ -109,20 +109,13 @@
         <DCCReference Include="..\Testes\Connection.Master.ViewTeste.pas">
             <Form>Form24</Form>
         </DCCReference>
-        <DCCReference Include="..\Lib\Connection.Master.IInterface.pas"/>
-        <DCCReference Include="..\Resources\Config.DataBase.ObjectConcrete.pas"/>
-        <DCCReference Include="..\Lib\Connection.Master.Firedac.pas"/>
-        <DCCReference Include="..\Lib\Firedac\Database.IInterfaces.pas"/>
-        <DCCReference Include="..\Lib\Firedac\Database.Controller.pas"/>
-        <DCCReference Include="..\Lib\Model\Database.Model.pas"/>
         <DCCReference Include="..\Lib\Domains.Controller.pas"/>
         <DCCReference Include="..\Lib\Controllers.Routers.pas"/>
         <DCCReference Include="..\Testes\Clientes.Controller.pas"/>
+        <DCCReference Include="..\Lib\Controllers.Global.pas"/>
         <DCCReference Include="..\Testes\Clientes.view.pas">
             <Form>FVisaoCliente</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Lib\Controllers.Global.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
