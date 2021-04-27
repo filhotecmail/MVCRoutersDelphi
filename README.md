@@ -76,6 +76,91 @@ RoutersController.Route('/Clientes','Submit',[]);
 ```  
 Bom com isso eu já consigo elaborar meu sistema MVC , onde a View não conhece o Controller , o Controller não conhece a View e o Controller não precisa conhecer o Modelo, se quiser hehehe, claro não podemos chegar tão fundo assim, mas podemos extender isso a outras arquiteturas como cadamas de Serviço, Domínio.
 
+#Sistema de Midlewares para as rotas.
+  Pensando em pequenos trechos de códigos que vão executar pequenas lógicas para que as rotas possam ser acionadas.
+   Dessa forma Criei uma classe base Chamada TMidlewareRouters..
+Uma Classe Abstrata pequena com apenas 2 propriedades iniciais para podermos trabalhar
+  ```Delphi
+    type TMidlwareRoute = Class Abstract(TPersistent)
+  strict private
+    FIsValidate: Boolean;
+    FMsgnotValidate: String;
+    procedure SetIsValidate(const Value: Boolean);
+    procedure SetMsgnotValidate(const Value: String);
+  published
+    property IsValidate: Boolean read FIsValidate write SetIsValidate;
+    property MsgnotValidate: String read FMsgnotValidate write SetMsgnotValidate;
+  end;
+  ```
+ Intejando o midleware como parte de uma lógica dentro da classe de rotas.
+```Delphi
+function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue;
+  AConstrutor: Boolean; ConstrutorName: String; AParamsConstructor: array of TValue; ARouterType:TRouterType; AMidleWareName: String = ''): TValue;
+  var FMidleware: TObject;
+begin
+  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
+  begin
+    FMidleware:= TObject(GetClass(AMidleWareName).Create);
+   try
+    Assert( TMidlwareRoute(FMidleware).IsValidate,
+            TMidlwareRoute(FMidleware).MsgnotValidate);
+   finally
+    FreeAndNil(FMidleware);
+   end;
+  end;
+ if GetClass(AClassName) <> nil then
+  Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AParamsConstructor,ARouterType)
+  else
+  raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
+end;
+
+```
+E agora o Toque final, testando, vamos Criar uma Classe herdando da classe Abstrata de Midlewares, e vamos chama-la de AUth.
+```Delphi
+type TAuthMidleware = Class(TMidlwareRoute)
+   private
+    FUsername: string;
+    FPassWord: String;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+  End;
+
+implementation
+
+
+ { TAuthMidleware }
+
+procedure TAuthMidleware.AfterConstruction;
+begin
+  inherited;
+   // Executar a Lógica
+   MsgnotValidate:= 'Usuário não autenticado';
+   IsValidate := (( FUsername = 'Carlos') and (  FPassWord = '1234' ) );
+end;
+
+procedure TAuthMidleware.BeforeDestruction;
+begin
+  inherited;
+
+end;
+
+initialization
+ RegisterClassAlias(TAuthMidleware,'Auth');
+ Finalization
+ UnRegisterClass( TAuthMidleware );
+end.
+```
+E Adicionando o midleware na rota.
+
+```Delphi
+ RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,'Auth');
+ RoutersController.Route('/Clientes','Submit',[],'Auth');
+```
+
+    
+
+
 
 
          
