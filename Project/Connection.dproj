@@ -106,18 +106,18 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\Testes\Connection.Master.ViewTeste.pas">
+        <DCCReference Include="..\Testes\App\Views\Connection.Master.ViewTeste.pas">
             <Form>Form24</Form>
         </DCCReference>
         <DCCReference Include="..\Lib\Domains.Controller.pas"/>
         <DCCReference Include="..\Lib\Controllers.Routers.pas"/>
-        <DCCReference Include="..\Testes\Clientes.Controller.pas"/>
-        <DCCReference Include="..\Testes\Cliente.routers.pas"/>
-        <DCCReference Include="..\Testes\Clientes.view.pas">
+        <DCCReference Include="..\Testes\App\controllers\Clientes.Controller.pas"/>
+        <DCCReference Include="..\Testes\App\routers\Cliente.routers.pas"/>
+        <DCCReference Include="..\Testes\App\Views\Clientes.view.pas">
             <Form>FVisaoCliente</Form>
         </DCCReference>
         <DCCReference Include="..\Lib\Controllers.Routers.ObjectConcrete.pas"/>
-        <DCCReference Include="..\Testes\Routers.Auth.Midleware.pas"/>
+        <DCCReference Include="..\Testes\App\midlewares\Routers.Auth.Midleware.pas"/>
         <DCCReference Include="..\Lib\Routers.Midleware.Abstract.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

@@ -2,16 +2,16 @@ program Connection;
 
 uses
   Vcl.Forms,
-  Connection.Master.ViewTeste in '..\Testes\Connection.Master.ViewTeste.pas' {Form24},
+  Connection.Master.ViewTeste in '..\Testes\App\Views\Connection.Master.ViewTeste.pas' {Form24},
   Vcl.Themes,
   Vcl.Styles,
   Domains.Controller in '..\Lib\Domains.Controller.pas',
   Controllers.Routers in '..\Lib\Controllers.Routers.pas',
-  Clientes.Controller in '..\Testes\Clientes.Controller.pas',
-  Cliente.routers in '..\Testes\Cliente.routers.pas',
-  Clientes.view in '..\Testes\Clientes.view.pas' {FVisaoCliente},
+  Clientes.Controller in '..\Testes\App\controllers\Clientes.Controller.pas',
+  Cliente.routers in '..\Testes\App\routers\Cliente.routers.pas',
+  Clientes.view in '..\Testes\App\Views\Clientes.view.pas' {FVisaoCliente},
   Controllers.Routers.ObjectConcrete in '..\Lib\Controllers.Routers.ObjectConcrete.pas',
-  Routers.Auth.Midleware in '..\Testes\Routers.Auth.Midleware.pas',
+  Routers.Auth.Midleware in '..\Testes\App\midlewares\Routers.Auth.Midleware.pas',
   Routers.Midleware.Abstract in '..\Lib\Routers.Midleware.Abstract.pas';
 
 {$R *.res}
