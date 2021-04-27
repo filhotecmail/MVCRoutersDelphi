@@ -1,4 +1,4 @@
-unit Controllers.Global;
+unit Cliente.routers;
 
 interface
 
@@ -18,8 +18,5 @@ uses
   RoutersController.RegisterRouters(TFVisaoCliente,'/ClientesView');
  end;
   Initialization
-  RoutersController := TControllersRoute.Create;
   RegisterControllers;
-  finalization
-  FreeAndNil( RoutersController );
 end.

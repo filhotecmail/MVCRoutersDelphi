@@ -8,13 +8,15 @@ uses
   Domains.Controller in '..\Lib\Domains.Controller.pas',
   Controllers.Routers in '..\Lib\Controllers.Routers.pas',
   Clientes.Controller in '..\Testes\Clientes.Controller.pas',
-  Controllers.Global in '..\Lib\Controllers.Global.pas',
-  Clientes.view in '..\Testes\Clientes.view.pas' {FVisaoCliente};
+  Cliente.routers in '..\Testes\Cliente.routers.pas',
+  Clientes.view in '..\Testes\Clientes.view.pas' {FVisaoCliente},
+  Controllers.Routers.ObjectConcrete in '..\Lib\Controllers.Routers.ObjectConcrete.pas';
 
 {$R *.res}
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  RoutersController := TControllersRoute.Create;
   TStyleManager.TrySetStyle('Windows10 SlateGray');
   Application.CreateForm(TForm24, Form24);
   Application.Run;

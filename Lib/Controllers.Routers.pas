@@ -21,13 +21,24 @@ interface
      function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
            ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TControllersRoute; overload;
   public
-    function Route(const AClassName: String; Method: String; AParams: Array of TValue):TValue; Overload;
+    function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareName: String = '' ):TValue; Overload;
     function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
-     ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TControllersRoute; Overload;
+     ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType; AMidleWareName: String = ''): TControllersRoute; Overload;
     function RegisterRouters( ASourceController: TPersistentClass; AControllerAlias: String ):TControllersRoute; overload;
     function FreeRoute(const AClassName: String):TControllersRoute;
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+  end;
+
+  type TMidlwareRoute = Class Abstract(TPersistent)
+  strict private
+    FIsValidate: Boolean;
+    FMsgnotValidate: String;
+    procedure SetIsValidate(const Value: Boolean);
+    procedure SetMsgnotValidate(const Value: String);
+  published
+    property IsValidate: Boolean read FIsValidate write SetIsValidate;
+    property MsgnotValidate: String read FMsgnotValidate write SetMsgnotValidate;
   end;
 
   var RoutersController:TControllersRoute;
@@ -60,7 +71,7 @@ begin
  RegisterClassAlias(ASourceController,AControllerAlias);
 end;
 
-function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue): TValue;
+function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue; AMidleWareName: String = ''): TValue;
 var FClass: TPersistentClass;
      RttiContext: TRttiContext;
      RttiInstanceType: TRttiInstanceType;
@@ -68,6 +79,9 @@ var FClass: TPersistentClass;
      Instance: TValue;
 begin
   Result:= Self;
+  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
+    Assert( TMidlwareRoute(GetClass(AMidleWareName)).IsValidate,TMidlwareRoute(GetClass(AMidleWareName)).MsgnotValidate);
+
   Assert( GetClass(AClassName) <> nil,'Nenhuma rota encontrada com o nome de '+AClassName+'!');
   if not ( FRoutersInstance.Items[AClassName].IsEmpty ) then
   begin
@@ -80,8 +94,10 @@ begin
 end;
 
 function TControllersRoute.Route(const AClassName: String; Method: String; AParams: array of TValue;
-  AConstrutor: Boolean; ConstrutorName: String; AParamsConstructor: array of TValue; ARouterType:TRouterType): TControllersRoute;
+  AConstrutor: Boolean; ConstrutorName: String; AParamsConstructor: array of TValue; ARouterType:TRouterType; AMidleWareName: String = ''): TControllersRoute;
 begin
+  if not Trim(AMidleWareName).IsNullOrEmpty(AMidleWareName) then
+    Assert( TMidlwareRoute(GetClass(AMidleWareName)).IsValidate,TMidlwareRoute(GetClass(AMidleWareName)).MsgnotValidate);
  if GetClass(AClassName) <> nil then
   Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AParamsConstructor,ARouterType)
   else
@@ -123,5 +139,22 @@ begin
  FreeAndNil( Obj );
  FRoutersInstance.Remove(AClassName);
 end;
+
+ { TMidlwareRoute }
+
+procedure TMidlwareRoute.SetIsValidate(const Value: Boolean);
+begin
+  FIsValidate := Value;
+end;
+
+procedure TMidlwareRoute.SetMsgnotValidate(const Value: String);
+begin
+  FMsgnotValidate := Value;
+end;
+
+initialization
+
+ Finalization
+ FreeAndNil( RoutersController );
 
 end.
