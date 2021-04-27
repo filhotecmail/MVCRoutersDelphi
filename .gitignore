@@ -56,7 +56,9 @@
 *.projdata
 *.tvsconfig
 *.dsk
-.metadata/
+Lib/Connection.Master.Firedac.pas
+Lib/Connection.Master.IInterface.pas
+Lib/Connection.Master.Model.dfm
 
 # Delphi history and backups
 __history/
