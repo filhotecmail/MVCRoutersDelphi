@@ -36,7 +36,7 @@ procedure TClientesController.BeforeDestruction;
 begin
   inherited;
   FreeAndNil( FValues );
-  RoutersController.FreeRoute('/ClientesView');
+ // RoutersController.FreeRoute('/ClientesView');
 end;
 
 class function TClientesController.New: TClientesController;
@@ -52,7 +52,6 @@ end;
 procedure TClientesController.Render;
 begin
  ShowMessage('Teste');
- RoutersController.Route('/ClientesView','Render',FCallObj,True,'Create',[nil],Controller);
 end;
 
 procedure TClientesController.Submit;

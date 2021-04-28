@@ -22,7 +22,7 @@ procedure TAuthMiddleware.AfterConstruction;
 begin
   inherited;
    // Executar a Lógica
-   FUsername := 'Adriano';
+   FUsername := 'Carlos';
    FPassWord := '1234';
    Msg:= 'Usuário não autenticado';
    IsValidate := (( FUsername = 'Carlos') and (  FPassWord = '1234' ) );
