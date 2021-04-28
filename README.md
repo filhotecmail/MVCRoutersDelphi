@@ -161,7 +161,7 @@ initialization
 end.
 ```
 
-Passando Array de Midlewares par verifição nas rotas.
+Passando Array de Midlewares para verifição nas rotas.
 ```Delphi
  RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller,['Auth']);
  RoutersController.Route('/Clientes','Submit',[],['Auth']);
