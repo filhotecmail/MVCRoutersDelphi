@@ -21,7 +21,7 @@ interface
     FControllersForView: TDictionary<TControllerName,TPersistentClass>;
     FControllerName: STring;
     FControllerObj: TPersistentClass;
-    procedure CheckMidlewares(const AMidlewares: TMidlewares);
+    procedure CheckMidlewares(const AMidlewares: TMidlewares; AMidlwareCallBack: TProc<TMiddlwareRoute>);
   private
     function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
            ConstrutorName: String; AParamsConstructor: Array of TValue; ARouterType:TRouterType): TValue; overload;
@@ -60,7 +60,7 @@ begin
   FreeAndNil( FRoutersInstance );
 end;
 
-procedure TControllersRoute.CheckMidlewares(const AMidlewares: TMidlewares);
+procedure TControllersRoute.CheckMidlewares(const AMidlewares: TMidlewares; AMidlwareCallBack: TProc<TMiddlwareRoute>);
  var FMidleware: TObject;
       I: integer;
 begin
@@ -71,6 +71,8 @@ begin
       FMidleware:= TObject(GetClass(AMidlewares[I]).Create);
      try
       Assert( TMiddlwareRoute(FMidleware).IsValidate,TMiddlwareRoute(FMidleware).Msg);
+      if Assigned(AMidlwareCallBack) then
+         AMidlwareCallBack(TMiddlwareRoute(FMidleware));
      finally
       FreeAndNil(FMidleware);
      end;
@@ -94,10 +96,25 @@ function TControllersRoute.Route(const AClassName: String; Method: String;
   AParams: array of TValue; AConstrutor: Boolean; ConstrutorName: String;
   AConstructorParam: TConstructorParams; ARouterType: TRouterType;
   AMidleWareNames: TMidlewares): TValue;
+  var FValue: TValue;
+      FAClassName: String; FMethod: String;
+      FAParams: array of TValue;
+      FAConstrutor: Boolean;
+      FConstrutorName: String;
+      FAConstructorParam: TConstructorParams;
+      FARouterType: TRouterType;
+      FAMidleWareNames: TMidlewares;
 begin
-  CheckMidlewares(AMidleWareNames);
+  CheckMidlewares(AMidleWareNames,
+  procedure
+  ( AMiddleCallBack: TMiddlwareRoute )
+  begin
+   FValue:= Execute(FAClassName,FMethod,FAParams,FAConstrutor,FConstrutorName,FAConstructorParam,FARouterType);
+   if Assigned(AMiddleCallBack.ACallBackValue) then
+   AMiddleCallBack.ACallBackValue(FValue);
+  end);
  if GetClass(AClassName) <> nil then
-  Result := Execute(AClassName,Method,AParams,AConstrutor,ConstrutorName,AConstructorParam,ARouterType)
+  Result := FValue
   else
   raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
 end;
