@@ -51,12 +51,17 @@ end;
 
 procedure TClientesController.Render;
 begin
- ShowMessage('Teste');
+ ShowMessage('Acionado o método Render');
 end;
 
 procedure TClientesController.Submit;
 begin
  ShowMessage('Submit');
 end;
+
+ initialization
+ RegisterClassAlias(TClientesController,'/ClientesController');
+ Finalization
+ UnRegisterClass( TClientesController );
 
 end.

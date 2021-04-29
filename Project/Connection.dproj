@@ -112,13 +112,14 @@
         <DCCReference Include="..\Lib\Domains.Controller.pas"/>
         <DCCReference Include="..\Lib\Controllers.Routers.pas"/>
         <DCCReference Include="..\Testes\App\controllers\Clientes.Controller.pas"/>
-        <DCCReference Include="..\Testes\App\routers\Cliente.routers.pas"/>
+        <DCCReference Include="..\Testes\App\routers\Routers.Facade.pas"/>
         <DCCReference Include="..\Testes\App\Views\Clientes.view.pas">
             <Form>FVisaoCliente</Form>
         </DCCReference>
         <DCCReference Include="..\Lib\Controllers.Routers.ObjectConcrete.pas"/>
         <DCCReference Include="..\Testes\App\midlewares\Routers.Auth.Midleware.pas"/>
         <DCCReference Include="..\Lib\Routers.Middleware.Abstract.pas"/>
+        <DCCReference Include="..\Lib\Routers.Methods.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

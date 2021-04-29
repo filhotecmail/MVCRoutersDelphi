@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,JSon;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,JSon, Routers.Methods;
 
 type
   TForm24 = class(TForm)
@@ -25,10 +25,7 @@ var
   Form24: TForm24;
 
 implementation
-uses
-  Controllers.Routers;
 {$R *.dfm}
-
 
 procedure TForm24.AfterConstruction;
 begin
@@ -38,13 +35,14 @@ end;
 
 procedure TForm24.btn4Click(Sender: TObject);
 begin
- RoutersController.Route('/Clientes','Render',[],True,'New',[],['Auth']);
- RoutersController.Route('/Clientes','Submit',[],['Auth']);
+  Group('Clientes','CriaControllerClientes',[]);
+// RoutersController.Route('/Clientes','Render',[],True,'New',[],['Auth']);
+// RoutersController.Route('/Clientes','Submit',[],['Auth']);
 end;
 
 procedure TForm24.btn5Click(Sender: TObject);
 begin
- RoutersController.FreeRoute('/Clientes');
+// RoutersController.FreeRoute('/Clientes');
 end;
 
 procedure TForm24.OnFoundDataBase(Obj: TJSONObject);
@@ -52,4 +50,9 @@ begin
  mmo1.Lines.Clear;
  mmo1.Lines.Add( Obj.Format );
 end;
+
+ initialization
+ RegisterClassAlias(TForm24,'/Clientes.View');
+ Finalization
+ UnRegisterClass( TForm24 );
 end.
