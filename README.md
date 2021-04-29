@@ -163,8 +163,19 @@ end.
 
 Passando Array de Midlewares para verifição nas rotas.
 ```Delphi
- RoutersController.Route('/Clientes','Render',[],True,'New',[],['Auth']);
- RoutersController.Route('/Clientes','Submit',[],['Auth']);
+ interface
+uses
+  System.SysUtils,System.Generics.Collections,System.Classes, Routers.Methods;
+  
+implementation
+
+initialization
+
+ RegisterGroup('Clientes',[],[
+ Controller('/ClientesController','create',[],[],'CriaControllerClientes'),
+ Controller('/ClientesController','submit',[],[],'TesteSubmit')
+ ] );
+end.
 ```
 # Uma chamada View para o controller.
 
