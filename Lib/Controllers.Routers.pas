@@ -26,6 +26,7 @@ interface
     function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
            ConstrutorName: String; AParamsConstructor: Array of TValue): TValue; overload;
   public
+    function View(const AClassName: String):TValue; overload;
     function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareNames: TMidlewares = nil): TValue; overload;
     function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
      ConstrutorName: String; AConstructorParam: TConstructorParams; AMidleWareNames: TMidlewares = nil): TValue; Overload;
@@ -124,6 +125,20 @@ begin
   Result := FValue
   else
   raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
+end;
+
+function TControllersRoute.View(const AClassName: String): TValue;
+ var FrmClass : TFormClass;
+     Frm : TForm;
+begin
+ FrmClass := TFormClass(FindClass(AClassName));
+ Frm      := FrmClass.Create(Application);
+ Result :=  Frm;
+ try
+  Frm.ShowModal;
+ finally
+  FreeAndNil( Frm );
+ end;
 end;
 
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
