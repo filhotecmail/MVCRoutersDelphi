@@ -166,6 +166,16 @@ Passando Array de Midlewares para verifição nas rotas.
  RoutersController.Route('/Clientes','Render',[],True,'New',[],['Auth']);
  RoutersController.Route('/Clientes','Submit',[],['Auth']);
 ```
+# Uma chamada View para o controller.
+
+Seguindo o modelo MVC do Laravel, foi criado um método view no sistema de rotas, para que seja possível dentro do controller chamar uma View pelo Nome.
+```Delphi
+procedure TClientesController.Render;
+begin
+ RoutersController.View('/ClientesView');
+end;
+
+```
 
     
 
