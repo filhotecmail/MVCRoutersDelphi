@@ -37,9 +37,9 @@ begin
 
 end;
 
- initialization
+initialization
  RegisterClassAlias(TClientesController,'/ClientesController');
- Finalization
+Finalization
  UnRegisterClass( TClientesController );
 
 end.

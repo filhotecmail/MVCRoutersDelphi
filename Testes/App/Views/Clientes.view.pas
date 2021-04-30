@@ -16,7 +16,6 @@ type
     { Private declarations }
   public
     { Public declarations }
-    procedure Render(const AParam: Array of TValue);
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
     
@@ -24,8 +23,6 @@ type
 
 implementation
 
-uses
-  Controllers.Routers;
 
 {$R *.dfm}
 { TFVisaoCliente }
@@ -41,10 +38,5 @@ begin
 
 end;
 
-procedure TFVisaoCliente.Render(const AParam: Array of TValue);
-begin
- ShowMessage( AParam[0].AsType< TJSONObject>.ToJSON );
- ShowModal;
-end;
 
 end.
