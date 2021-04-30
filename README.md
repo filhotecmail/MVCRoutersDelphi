@@ -77,8 +77,20 @@ end;
 ```
  Abaixo temos um exemplo de como Invokar as rotas, o primeiro overload, invoka uma Rota chamada '/Clientes', seu método 'Render', Você pode passar Parâmetros caso precise, True ou false determina se é um método construtor ou não, se for um método construtor, deverá informar o nome do Método , por ex: Create(), Createnew(), New, Build, Make , etc.., em seguida você pode passar os parâmetros do construtor, e o tipo , teremos inicialmente 3 tipos de rotas , Controller, Model,View.
 ```Delphi
-RoutersController.Route('/Clientes','Render',[],True,'New',[],Controller);
-RoutersController.Route('/Clientes','Submit',[]);
+```Delphi
+ interface
+uses
+  System.SysUtils,System.Generics.Collections,System.Classes, Routers.Methods;
+  
+implementation
+
+initialization
+
+ RegisterGroup('Clientes',['Auth'],[
+ Controller('/ClientesController','create',[],[],'CriaControllerClientes'),
+ Controller('/ClientesController','submit',[],[],'TesteSubmit')
+ ] );
+end.
 ```
 Contamos também com um Método para liberar a instância da memória. Nesse ponto é que me pergunto, será que podemos resolver isso de uma forma automática?, Poderíamos contar com classes Interfeceadas, porém , quero deixar as rotas livres, reduzindo e muito todo acoplamento e dependências entre as classes.
 ```Delphi
@@ -163,8 +175,19 @@ end.
 
 Passando Array de Midlewares para verifição nas rotas.
 ```Delphi
- RoutersController.Route('/Clientes','Render',[],True,'New',[],['Auth']);
- RoutersController.Route('/Clientes','Submit',[],['Auth']);
+ interface
+uses
+  System.SysUtils,System.Generics.Collections,System.Classes, Routers.Methods;
+  
+implementation
+
+initialization
+
+ RegisterGroup('Clientes',['Auth'],[
+ Controller('/ClientesController','create',[],[],'CriaControllerClientes'),
+ Controller('/ClientesController','submit',[],[],'TesteSubmit')
+ ] );
+end.
 ```
 # Uma chamada View para o controller.
 
@@ -172,7 +195,7 @@ Seguindo o modelo MVC do Laravel, foi criado um método view no sistema de rotas
 ```Delphi
 procedure TClientesController.Render;
 begin
- RoutersController.View('/ClientesView');
+ View('/ClientesView',Self);
 end;
 
 ```
