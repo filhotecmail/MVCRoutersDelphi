@@ -16,7 +16,7 @@ A fachada é trocada entre clientes e o subsistema. Ele "encapsula" o subsistema
 
 # vamos pensar em uma Fachada.
    Pense em uma Empresa, uma oficina de informatica e venda de periféricos, com serviços de eletrônica.
-   Bom Tvamos tentar resumir o que a empresa faz , sem falar ao cliente como fazemos a coisa funcionar. O Cliente não precisa conhecer o Objeto Tecnicos, o Objeto Balcão, e uma Oficina de informatica é uma oficina de informática. Agora tente falar de sua oficina para quem passa na rua .
+   Bom vamos tentar resumir o que a empresa faz , sem falar ao cliente como fazemos a coisa funcionar. O Cliente não precisa conhecer o Objeto Tecnicos, o Objeto Balcão, e uma Oficina de informatica é uma oficina de informática. Agora tente falar de sua oficina para quem passa na rua .
 
    ![image](https://user-images.githubusercontent.com/18727307/116729477-9645c500-a9bd-11eb-83ee-4ca080930f3a.png)
 
@@ -31,8 +31,8 @@ A fachada é trocada entre clientes e o subsistema. Ele "encapsula" o subsistema
      Controller('/Oficinadozezinho','Venda',[],[],'Vendo Perifericos'),
      Controller('/Oficinadozezinho','Reballing',[],[],'Reballing em Procesadores'),
      Controller('/Oficinadozezinho','ConsertoNotebooks',[],[],'Conserto de Notebooks'),
-     Controller('/Oficinadozezinho','ConsertoLCD',[],[],'Conserto de Monitore LCD'),
-     Controller('/Oficinadozezinho','ConsertoLED',[],[],'Conserto de Monitore Led'),
+     Controller('/Oficinadozezinho','ConsertoLCD',[],[],'Conserto de Monitores LCD'),
+     Controller('/Oficinadozezinho','ConsertoLED',[],[],'Conserto de Monitores Led'),
      Controller('/Oficinadozezinho','impressoras',[],[],'Manutenção de impressoras'),
      Controller('/Oficinadozezinho','impressorasFiscais',[],[],'Manutenção de Impressoras Fiscais'),
      Controller('/Oficinadozezinho','ManutencaoCelulares',[],[],'Manutenção de Celulares'),
