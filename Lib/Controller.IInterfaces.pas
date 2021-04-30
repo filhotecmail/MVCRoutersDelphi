@@ -1,14 +1,14 @@
-unit Domains.Controller;
+unit Controller.IInterfaces;
 
 interface
   Uses System.SysUtils,System.Classes,System.Generics.Collections;
 
-  type IDomainController = interface
+  type IController = interface
     ['{210C5CC7-8DEE-4C55-B17E-E0D10229A187}']
 
   end;
 
-  type TControllerBase = Class(TInterfacedPersistent,IDomainController)
+  type TControllerBase = Class(TInterfacedPersistent,IController)
 
   public
     procedure AfterConstruction; override;
@@ -16,8 +16,6 @@ interface
   End;
 
 implementation
-
-
  { TControllerBase }
 
 procedure TControllerBase.AfterConstruction;

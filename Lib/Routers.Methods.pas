@@ -2,7 +2,7 @@ unit Routers.Methods;
 
 interface
 
-uses Controllers.Routers,Rtti;
+uses Rtti, Routers.ConcreteClass.Obj;
 
 function Route(AControllerAlias: String;
              Method: String; AParams: Array of TValue;
@@ -63,7 +63,7 @@ end;
 
 function Group(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue):TValue;
 begin
- Result:= RoutersController.Getgroups(AGroupName).Get(AGroupName,AMethodName,AMethodParams);
+ Result:= RoutersController.Getgroups(AGroupName).GetInList(AGroupName,AMethodName,AMethodParams);
 end;
 
 function Controller(AControllerAlias: String;Method: String; const AParams: Array of TValue;
