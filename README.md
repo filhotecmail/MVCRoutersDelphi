@@ -228,6 +228,30 @@ begin
  Result:= FValue;
 end;
 ```
+Você precisa apenas Informar o middleware na construção da rota.
+Exemplo - Informando um Middleware de para o grupo de rotas.
+```Delphi
+ unit Routers.Facade;
+
+interface
+
+uses
+  System.SysUtils,System.Generics.Collections,System.Classes, Routers.Methods;
+
+implementation
+
+initialization
+
+ RegisterGroup('Clientes',['Auth'],[
+ Construtor(Controller('/ClientesController','create',[],[],'CriaControllerClientes')),
+ Controller('/ClientesController','Submit',[],[],'TesteSubmit')
+ ] );
+
+Finalization
+
+end.
+
+```
 
 
     
