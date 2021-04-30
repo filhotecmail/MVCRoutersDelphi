@@ -35,10 +35,8 @@ end;
 
 procedure TForm24.btn4Click(Sender: TObject);
 begin
-  // Irá executar sem Chechar o Middleware
   Group('Clientes','CriaControllerClientes',[]);
   Group('Clientes','Metodnaexcessao',[]);
-  // Irá executar verificando o middleware
   Group('Clientes','TesteSubmit',[]);
 end;
 
