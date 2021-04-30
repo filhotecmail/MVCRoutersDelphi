@@ -261,6 +261,20 @@ end.
 
 ```
 
+# Chamando Rotas que estão em um Grupo de rotas.
+   Você pode ter grupos de rotas registrados no Facade de rotas, e para utilizar ex:  Método Group( 'Nome da rota','Método' ou Apelido do Método, Parametros )
+```Delphi
+
+procedure TForm24.btn4Click(Sender: TObject);
+begin
+  Group('Clientes','CriaControllerClientes',[]);
+  Group('Clientes','TesteSubmit',[]);
+
+   Método Group( 'Nome da rota','Método' ou Apelido do Método, Parametros )
+end;
+``` 
+Você pode passar tanto o Nome do Método da rota , ou o apelido que designou para o Método.
+
 
 
     
