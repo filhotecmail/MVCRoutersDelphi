@@ -9,7 +9,7 @@ implementation
 
 initialization
  RegisterGroup('Clientes',[],[
- Controller('/ClientesController','create',[],[],'CriaControllerClientes'),
+ Construtor(Controller('/ClientesController','create',[],[],'CriaControllerClientes')),
  Controller('/ClientesController','Submit',[],[],'TesteSubmit')
  ] );
 

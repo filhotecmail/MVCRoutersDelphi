@@ -82,7 +82,7 @@ interface
     FControllersForView: TDictionary<TControllerName,TPersistentClass>;
     FControllerName: STring;
     FControllerObj: TPersistentClass;
-    procedure CheckMidlewares(const AMidlewares: TMidlewares; AMidlwareCallBack: TProc<TMiddlwareRoute>);
+
   private
     FListaGrupos: TDictionary<String,TGroupRoute>;
     function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
@@ -114,6 +114,8 @@ interface
     procedure BeforeDestruction; override;
   end;
 
+  procedure CheckMidlewares(const AMidlewares: TMidlewares; AMidlwareCallBack: TProc<TMiddlwareRoute>);
+
  var RoutersController:TControllersRoute;
  implementation
 
@@ -140,7 +142,7 @@ begin
   FreeAndNil( FListaGrupos );
 end;
 
-procedure TControllersRoute.CheckMidlewares(const AMidlewares: TMidlewares; AMidlwareCallBack: TProc<TMiddlwareRoute>);
+procedure CheckMidlewares(const AMidlewares: TMidlewares; AMidlwareCallBack: TProc<TMiddlwareRoute>);
  var FMidleware: TObject;
       I: integer;
 begin
@@ -321,10 +323,26 @@ begin
 end;
 
 function TGroupRoute.Execute(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue): TValue;
+ var I: Integer;
+     FValue: TValue;
 begin
  Assert( FListGroups.ContainsKey(AGroupName),'Não existe um Grupo com esse objeto' );
  Assert(FListGroups.Items[AGroupName].Methods.ContainsKey(AMethodName), 'Não existe um Grupo com esse objeto');
- Result:= FListGroups.Items[AGroupName].Methods.Items[AMethodName].ExecuteMethod;
+ // Vai verifiacar na Lista de grupos de Rotas, no array de middlewares , se existe
+ // algum middleware informado, se existir , todos os métodos disparados para aquele grupo de rotas
+ // só serão executados caso passe pelo middleware;
+  begin
+   CheckMidlewares(FListGroups.Items[AGroupName].AMiddlewares,
+    procedure
+   ( AMiddleCallBack: TMiddlwareRoute )
+   begin
+    FValue:= FListGroups.Items[AGroupName].Methods.Items[AMethodName].ExecuteMethod;
+    if AMiddleCallBack <> nil then
+    if Assigned(AMiddleCallBack.ACallBackValue) then
+      AMiddleCallBack.ACallBackValue(FValue);
+   end);
+  end;
+ Result:= FValue;
 end;
 
 function TGroupRoute.GetinList(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue): TGroupobjects;
