@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids,Rtti,Json;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids,Rtti,Json,
+  System.Helper;
 
 type
   TFVisaoCliente = class(TForm)
@@ -35,5 +36,8 @@ begin
 
 end;
 
-
+  initialization
+  RegisterClassAlias(TFVisaoCliente,'/Oficina.View')
+  Finalization
+  UnRegisterClass(TFVisaoCliente);
 end.

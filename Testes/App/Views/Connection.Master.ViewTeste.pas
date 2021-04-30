@@ -36,8 +36,7 @@ end;
 procedure TForm24.btn4Click(Sender: TObject);
 begin
   Group('Oficina Zezinhos Informatica Ltda.ME','Falar com a Oficina',[]);
-  Group('Oficina Zezinhos Informatica Ltda.ME','Arrumo Computadores',[]);
-  Group('Oficina Zezinhos Informatica Ltda.ME','Vendo Perifericos',[]);
+  Group('Oficina Zezinhos Informatica Ltda.ME','Lista de serviços da oficina do zezinho',[]);
 end;
 
 procedure TForm24.btn5Click(Sender: TObject);

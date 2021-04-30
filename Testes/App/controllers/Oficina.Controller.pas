@@ -22,9 +22,11 @@ interface
     function Eletronica: TValue;
     function WatsApp: TValue;
     function Email: TValue;
+    function ListaServicos:Tvalue;
 
     procedure OnClick( Sender:  TObject );
     class function New:TOficinaInformatica;
+    function Render(): TValue; override;
   end;
 
 implementation
@@ -101,6 +103,12 @@ end;
 function TOficinaInformatica.Reballing: TValue;
 begin
 
+end;
+
+
+function TOficinaInformatica.Render: TValue;
+begin
+ Result := View('/Oficina.View',nil,'/Oficinadozezinho');
 end;
 
 function TOficinaInformatica.Venda: TValue;

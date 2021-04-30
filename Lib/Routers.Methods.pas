@@ -83,8 +83,8 @@ end;
 function Controller(AControllerAlias: String;Method: String; const AParams: Array of TValue;
   AMidleWareNames: TMidlewares = nil; const AMethodAlias: String = '';
   ARouteType: TRouterType = AController): TMethodsClass;
-   var FMethodClass:TMethodsClass;
-       I: Integer;
+ var FMethodClass:TMethodsClass;
+     I: Integer;
 begin
  // Cria o Objeto de Metodos registrados para gravar no grupo
  FMethodClass:= TMethodsClass.Create;
