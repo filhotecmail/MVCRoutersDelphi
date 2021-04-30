@@ -63,7 +63,7 @@ end;
 
 function Group(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue):TValue;
 begin
- Result:= RoutersController.Getgroups(AGroupName).GetInList(AGroupName,AMethodName,AMethodParams);
+ Result:= RoutersController.Getgroups(AGroupName).Execute(AGroupName,AMethodName,AMethodParams);
 end;
 
 function Controller(AControllerAlias: String;Method: String; const AParams: Array of TValue;
@@ -72,7 +72,8 @@ function Controller(AControllerAlias: String;Method: String; const AParams: Arra
    var FMethodClass:TMethodsClass;
        I: Integer;
 begin
- FMethodClass:=TMethodsClass.Create;
+ // Cria o Objeto de Metodos registrados para gravar no grupo
+ FMethodClass:= TMethodsClass.Create;
  FMethodClass.AClassName := AControllerAlias;
  FMethodClass.MethodName := Method;
  FMethodClass.MethodAlias:= AMethodAlias;

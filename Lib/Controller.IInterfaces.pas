@@ -8,20 +8,6 @@ interface
 
   end;
 
-  type TControllerBase = Class(TInterfacedPersistent,IController)
-
-  public
-    procedure AfterConstruction; override;
-
-  End;
-
-implementation
- { TControllerBase }
-
-procedure TControllerBase.AfterConstruction;
-begin
-  inherited;
-
-end;
+  implementation
 
 end.

@@ -18,7 +18,7 @@ implementation
 procedure TClientesController.AfterConstruction;
 begin
   inherited;
-
+  ShowMessage('Controller Criado');
 end;
 
 procedure TClientesController.BeforeDestruction;

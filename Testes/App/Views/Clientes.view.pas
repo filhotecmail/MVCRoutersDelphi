@@ -18,12 +18,9 @@ type
     { Public declarations }
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
-    
   end;
 
 implementation
-
-
 {$R *.dfm}
 { TFVisaoCliente }
 procedure TFVisaoCliente.AfterConstruction;

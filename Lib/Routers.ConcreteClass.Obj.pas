@@ -86,7 +86,6 @@ interface
            ConstrutorName: String; AParamsConstructor: Array of TValue): TValue; overload;
 
   public
-    function View(const AClassName: String):TValue; overload;
     function Route(const AClassName: String; Method: String; AParams: Array of TValue; AMidleWareNames: TMidlewares = nil; const AMethodAlias: String = ''): TValue; overload;
     function Route(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
      ConstrutorName: String; AConstructorParam: TConstructorParams; AMidleWareNames: TMidlewares = nil; const AMethodAlias: String = ''): TValue; Overload;
@@ -155,7 +154,7 @@ begin
     end;
   end else
    if Assigned(AMidlwareCallBack) then
-      AMidlwareCallBack(TMiddlwareRoute(FMidleware));
+      AMidlwareCallBack(TMiddlwareRoute(nil));
 
 end;
 
@@ -236,32 +235,16 @@ begin
   FAConstrutor := AConstrutor;
   FConstrutorName:= ConstrutorName;
   FAConstructorParam:= AConstructorParam;
+  // Passa pela verificação dos Middlewares
   CheckMidlewares(AMidleWareNames,
   procedure
   ( AMiddleCallBack: TMiddlwareRoute )
   begin
    FValue:= Execute(FAClassName,FMethod,FAParams,FAConstrutor,FConstrutorName,FAConstructorParam);
+   if AMiddleCallBack <> nil then
    if Assigned(AMiddleCallBack.ACallBackValue) then
-   AMiddleCallBack.ACallBackValue(FValue);
+      AMiddleCallBack.ACallBackValue(FValue);
   end);
- if GetClass(AClassName) <> nil then
-  Result := FValue
-  else
-  raise Exception.Create('Nenhuma rota encontrada com o nome de '+AClassName);
-end;
-
-function TControllersRoute.View(const AClassName: String): TValue;
- var FrmClass : TFormClass;
-     Frm : TForm;
-begin
- FrmClass := TFormClass(FindClass(AClassName));
- Frm      := FrmClass.Create(Application);
- Result :=  Frm;
- try
-  Frm.ShowModal;
- finally
-  FreeAndNil( Frm );
- end;
 end;
 
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
@@ -274,18 +257,20 @@ function TControllersRoute.Execute(const AClassName: String; Method: String; APa
 begin
   FClass:= GetClass(AClassName);
   RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-  if AConstrutor then
-  begin
-   RttiMethod := RttiInstanceType.GetMethod(ConstrutorName);
-   Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor);
-   FRoutersInstance.Add(AClassName,Instance);
-   RttiMethod := RttiInstanceType.GetMethod(Method);
-   Result:= RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
-  end else
-  begin
-   RttiMethod := RttiInstanceType.GetMethod(Method);
-   Result:= RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
-  end;
+  FRoutersInstance.AddOrSetValue(AClassName,FClass);
+  RttiMethod := RttiInstanceType.GetMethod(Method);
+  Result:= RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
+//  if AConstrutor then
+//  begin
+//   RttiMethod := RttiInstanceType.GetMethod(ConstrutorName);
+//   Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor);
+//
+//   RttiMethod := RttiInstanceType.GetMethod(Method);
+//   Result:= RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
+//  end else
+//  begin
+//
+//  end;
 end;
 
 function TControllersRoute.FreeRoute(const AClassName: String): TControllersRoute;
