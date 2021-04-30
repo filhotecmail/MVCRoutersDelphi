@@ -48,16 +48,20 @@ interface
     FAgroupName: String;
     FMethods: TDictionary<String, TMethodsClass>;
     FMethodsAlias: TDictionary<String, TMethodsClass>;
+    FAMethodsExceptThisMiddleware: TDictionary<String, TMethodsClass>;
     procedure SetAgroupName(const Value: String);
     procedure SetAMiddlewares(const Value: TArray<String>);
     procedure SetMethods(const Value: TDictionary<String, TMethodsClass>);
     procedure SetMethodsAlias(const Value: TDictionary<String, TMethodsClass>);
+    procedure SetAMethodsExceptThisMiddleware(
+      const Value: TDictionary<String, TMethodsClass>);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
   published
     property AgroupName: String read FAgroupName write SetAgroupName;
     property AMiddlewares: TArray<String> read FAMiddlewares write SetAMiddlewares;
+    property AMethodsExceptThisMiddleware: TDictionary<String,TMethodsClass> read FAMethodsExceptThisMiddleware write SetAMethodsExceptThisMiddleware;
     property Methods: TDictionary<String,TMethodsClass> read FMethods write SetMethods;
     property MethodsAlias: TDictionary<String,TMethodsClass> read FMethodsAlias write SetMethodsAlias;
   end;
@@ -66,7 +70,7 @@ interface
      private
       FListGroups: TDictionary<String,TGroupobjects>;
      public
-      function AddInList( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass>  ):TGroupRoute;
+      function AddInList( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass>; AexceptThis: TArray<TMethodsClass>  ):TGroupRoute; overload;
       function GetInList(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue):TGroupobjects;
       function Execute(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue):TValue;
     procedure AfterConstruction; override;
@@ -107,7 +111,8 @@ interface
     ///  Registra na lista o Grupo de rotas
     ///  O Sistema irá checar , ao invokar o grupo e se o grupo tiver Algum Middlware Declarado
     /// </summary>
-    function RegisterGroup( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass> ):TControllersRoute;
+    function RegisterGroup( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass> ):TControllersRoute; overload;
+    function RegisterGroup( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass>; AExceptThis: TArray<TMethodsClass>):TControllersRoute; overload;
 
     function FreeRoute(const AClassName: String):TControllersRoute;
     procedure AfterConstruction; override;
@@ -165,6 +170,15 @@ begin
 
 end;
 
+function TControllersRoute.RegisterGroup(AGroupName: String;
+  AMiddlewares: TArray<String>; ARouters,
+  AExceptThis: TArray<TMethodsClass>): TControllersRoute;
+begin
+  Result:= self;
+  Assert( not FListaGrupos.ContainsKey('AGroupName'),'Já existe um grupo registrado com esse nome!' );
+  FListaGrupos.Add( AgroupName, TGroupRoute.Create.AddInList(AGroupName,AMiddlewares,ARouters,AExceptThis));
+end;
+
 function TControllersRoute.RegisterRouters(ASourceController: TPersistentClass;
   AControllerAlias: String): TControllersRoute;
 begin
@@ -182,7 +196,7 @@ function TControllersRoute.RegisterGroup(AGroupName: String;
 begin
   Result:= self;
   Assert( not FListaGrupos.ContainsKey('AGroupName'),'Já existe um grupo registrado com esse nome!' );
-  FListaGrupos.Add( AgroupName, TGroupRoute.Create.AddInList(AGroupName,AMiddlewares,ARouters));
+  FListaGrupos.Add( AgroupName, TGroupRoute.Create.AddInList(AGroupName,AMiddlewares,ARouters,[]));
 end;
 
 function TControllersRoute.Router(
@@ -294,7 +308,7 @@ end;
 { TGroupRoute }
 
 function TGroupRoute.AddinList(AGroupName: String; AMiddlewares: TArray<String>;
-  ARouters: TArray<TMethodsClass> ): TGroupRoute;
+  ARouters: TArray<TMethodsClass>; AexceptThis: TArray<TMethodsClass> ): TGroupRoute;
   var AGroupObject: TGroupobjects;
   I: Integer;
 begin
@@ -302,10 +316,13 @@ begin
  AGroupObject:= TGroupobjects.Create;
  AGroupObject.AgroupName := AGroupName;
  AGroupObject.AMiddlewares:= AMiddlewares;
+
  for I := Low(ARouters) to High(ARouters) do
  begin
   AGroupObject.Methods.Add( ARouters[I].MethodName,ARouters[I] );
   AGroupObject.Methods.Add( ARouters[I].MethodAlias,ARouters[I] );
+  AGroupObject.AMethodsExceptThisMiddleware.Add( ARouters[I].MethodAlias,ARouters[I] );
+  AGroupObject.AMethodsExceptThisMiddleware.Add( ARouters[I].MethodName,ARouters[I] );
  end;
  FListGroups.Add(AGroupName,AGroupObject);
 end;
@@ -359,17 +376,25 @@ procedure TGroupobjects.AfterConstruction;
 begin
   inherited;
   FMethods:= TDictionary<String, TMethodsClass>.create;
+  FAMethodsExceptThisMiddleware:= TDictionary<String, TMethodsClass>.create;
 end;
 
 procedure TGroupobjects.BeforeDestruction;
 begin
  inherited;
  FreeAndNil( FMethods );
+ FreeAndNil( FAMethodsExceptThisMiddleware );
 end;
 
 procedure TGroupobjects.SetAgroupName(const Value: String);
 begin
   FAgroupName := Value;
+end;
+
+procedure TGroupobjects.SetAMethodsExceptThisMiddleware(
+  const Value: TDictionary<String, TMethodsClass>);
+begin
+  FAMethodsExceptThisMiddleware := Value;
 end;
 
 procedure TGroupobjects.SetAMiddlewares(const Value: TArray<String>);
