@@ -47,15 +47,25 @@ uses Rtti, Routers.ConcreteClass.Obj;
 
  // Registra os grupos de rotas
  function RegisterGroup(AGroupName: String;AMiddlewares: TArray<String>;
- ARouters: TArray<TMethodsClass>):TControllersRoute;
+ ARouters: TArray<TMethodsClass>):TControllersRoute; overload;
+
+ function RegisterGroup(AGroupName: String;AMiddlewares: TArray<String>;
+ ARouters: TArray<TMethodsClass>; ExceptThis: TArray<TMethodsClass> ):TControllersRoute; overload;
  // invoka um Método que pertence a um grupo de rotas
  function Group(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue):TValue;
 
 implementation
 { TControllersRoute }
 
+function RegisterGroup(AGroupName: String;AMiddlewares: TArray<String>;
+ ARouters: TArray<TMethodsClass>; ExceptThis: TArray<TMethodsClass> ):TControllersRoute;
+ begin
+  Result:= RoutersController.RegisterGroup(AGroupName,AMiddlewares,ARouters,ExceptThis);
+ end;
+
 function Construtor( Const ABuildMethodType: TMethodsClass ): TMethodsClass;
 begin
+ ABuildMethodType.isConstrutor:= true;
  Result:= ABuildMethodType;
 end;
 

@@ -35,10 +35,11 @@ end;
 
 procedure TForm24.btn4Click(Sender: TObject);
 begin
+  // Irá executar sem Chechar o Middleware
   Group('Clientes','CriaControllerClientes',[]);
+  Group('Clientes','Metodnaexcessao',[]);
+  // Irá executar verificando o middleware
   Group('Clientes','TesteSubmit',[]);
-// RoutersController.Route('/Clientes','Render',[],True,'New',[],['Auth']);
-// RoutersController.Route('/Clientes','Submit',[],['Auth']);
 end;
 
 procedure TForm24.btn5Click(Sender: TObject);

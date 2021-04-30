@@ -321,8 +321,12 @@ begin
  begin
   AGroupObject.Methods.Add( ARouters[I].MethodName,ARouters[I] );
   AGroupObject.Methods.Add( ARouters[I].MethodAlias,ARouters[I] );
-  AGroupObject.AMethodsExceptThisMiddleware.Add( ARouters[I].MethodAlias,ARouters[I] );
-  AGroupObject.AMethodsExceptThisMiddleware.Add( ARouters[I].MethodName,ARouters[I] );
+ end;
+
+ for I := Low(AexceptThis) to High(AexceptThis) do
+ begin
+  AGroupObject.AMethodsExceptThisMiddleware.Add( AexceptThis[I].MethodAlias,AexceptThis[I] );
+  AGroupObject.AMethodsExceptThisMiddleware.Add( AexceptThis[I].MethodName,AexceptThis[I] );
  end;
  FListGroups.Add(AGroupName,AGroupObject);
 end;
@@ -343,11 +347,16 @@ function TGroupRoute.Execute(AGroupName: String;AMethodName: String; AMethodPara
  var I: Integer;
      FValue: TValue;
 begin
+ Result:= FValue;
  Assert( FListGroups.ContainsKey(AGroupName),'Não existe um Grupo com esse objeto' );
- Assert(FListGroups.Items[AGroupName].Methods.ContainsKey(AMethodName), 'Não existe um Grupo com esse objeto');
+ Assert(FListGroups.Items[AGroupName].Methods.ContainsKey(AMethodName) or
+        FListGroups.Items[AGroupName].FAMethodsExceptThisMiddleware.ContainsKey(AMethodName), 'Não existe um Método no grupo');
  // Vai verifiacar na Lista de grupos de Rotas, no array de middlewares , se existe
  // algum middleware informado, se existir , todos os métodos disparados para aquele grupo de rotas
  // só serão executados caso passe pelo middleware;
+  if FListGroups.Items[AGroupName].AMethodsExceptThisMiddleware.ContainsKey(AMethodName) then
+     FValue:= FListGroups.Items[AGroupName].AMethodsExceptThisMiddleware.Items[AMethodName].ExecuteMethod
+     else
   begin
    CheckMidlewares(FListGroups.Items[AGroupName].AMiddlewares,
     procedure
@@ -359,7 +368,7 @@ begin
       AMiddleCallBack.ACallBackValue(FValue);
    end);
   end;
- Result:= FValue;
+
 end;
 
 function TGroupRoute.GetinList(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue): TGroupobjects;
