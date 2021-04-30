@@ -14,6 +14,53 @@ Há um subsistema complexo com muitas classes e dependências entre elas. Os cli
 
 A fachada é trocada entre clientes e o subsistema. Ele "encapsula" o subsistema, contém a lógica complexa para trabalhar com o subsistema e fornece uma interface simplificada (métodos) para o cliente para o mundo exterior. A fachada delega as chamadas do cliente para o subsistema. Isso permite que o cliente use o sistema através da Fachada sem conhecer as classes, seus relacionamentos e dependências.
 
+# vamos pensar em uma Fachada.
+   Pense em uma Empresa, uma oficina de informatica e venda de periféricos, com serviços de eletrônica.
+   Bom vamos tentar resumir o que a empresa faz , sem falar ao cliente como fazemos a coisa funcionar. O Cliente não precisa conhecer o Objeto Tecnicos, o Objeto Balcão, e uma Oficina de informatica é uma oficina de informática. Agora tente falar de sua oficina para quem passa na rua .
+
+   ![image](https://user-images.githubusercontent.com/18727307/116729477-9645c500-a9bd-11eb-83ee-4ca080930f3a.png)
+
+  Vamos ver como isso pode ser feito na nossa fachada.
+
+  ```Delphi
+
+ RegisterGroup('Oficina Zezinhos Informatica Ltda.ME',['Auth'],[
+   // Método será executado depois da execução do Middleware
+     Construtor(Controller('/OficinaInformatica','create',[],[],'Falar com a Oficina')),
+     Controller('/Oficinadozezinho','AssistenciaComputadores',[],[],'Arrumo Computadores'),
+     Controller('/Oficinadozezinho','Venda',[],[],'Vendo Perifericos'),
+     Controller('/Oficinadozezinho','Reballing',[],[],'Reballing em Procesadores'),
+     Controller('/Oficinadozezinho','ConsertoNotebooks',[],[],'Conserto de Notebooks'),
+     Controller('/Oficinadozezinho','ConsertoLCD',[],[],'Conserto de Monitores LCD'),
+     Controller('/Oficinadozezinho','ConsertoLED',[],[],'Conserto de Monitores Led'),
+     Controller('/Oficinadozezinho','impressoras',[],[],'Manutenção de impressoras'),
+     Controller('/Oficinadozezinho','impressorasFiscais',[],[],'Manutenção de Impressoras Fiscais'),
+     Controller('/Oficinadozezinho','ManutencaoCelulares',[],[],'Manutenção de Celulares'),
+     Controller('/Oficinadozezinho','Eletronica',[],[],'Serviços de eletronica'),
+     Controller('/Oficinadozezinho','WatsApp',[],[],'Grupo no WatsApp'),
+     Controller('/Oficinadozezinho','Email',[],[],'Envie um email para a oficina')
+ ],[
+
+     // Método que não será validado pelo Middleware da Rota, Em referência a Except do Laravel
+     // Nesse caso Mesmo a rota tendo um middleware , ele não vai acionar o Middleware do grupo de rota
+    ] );
+    
+  ```
+
+  Agora temos uma simples Fachada para os serviços prestados da oficia do zezinho.
+   Vamos pensar agora que como eu não conheço o zezinho, mas eu sei o que eles fazem e tem o telefone dele lá e uma forma de falar com eles, então eu não preciso nem conhecer a loja do Zezinho..
+
+```Delphi
+  procedure TForm24.btn4Click(Sender: TObject);
+begin
+  Group('Oficina Zezinhos Informatica Ltda.ME','Falar com a Oficina',[]);
+  Group('Oficina Zezinhos Informatica Ltda.ME','Arrumo Computadores',[]);
+  Group('Oficina Zezinhos Informatica Ltda.ME','Vendo Perifericos',[]);
+end;
+
+```
+ 
+
 # O Laravel
 . O Laravel representa toda a complexidade em sistemas de Rotas , Facade. O Sistema de rotas do Laravel, concentra tudo que é necessário para que a aplicação funcuione perfeitamente, deixando simples e explicitamente o que se tem a nossa disposição. 
 
