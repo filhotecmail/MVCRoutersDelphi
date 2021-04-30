@@ -7,7 +7,7 @@ uses
   Vcl.Styles,
   Controller.IInterfaces in '..\Lib\Controller.IInterfaces.pas',
   Routers.ConcreteClass.Obj in '..\Lib\Routers.ConcreteClass.Obj.pas',
-  Clientes.Controller in '..\Testes\App\controllers\Clientes.Controller.pas',
+  Oficina.Controller in '..\Testes\App\controllers\Oficina.Controller.pas',
   Routers.Facade in '..\Testes\App\routers\Routers.Facade.pas',
   Clientes.view in '..\Testes\App\Views\Clientes.view.pas' {FVisaoCliente},
   Routers.Auth.Midleware in '..\Testes\App\midlewares\Routers.Auth.Midleware.pas',

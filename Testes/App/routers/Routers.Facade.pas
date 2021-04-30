@@ -9,21 +9,21 @@ implementation
 
 initialization
 
- RegisterGroup('Oficina',['Auth'],[
+ RegisterGroup('Oficina Zezinhos Informatica Ltda.ME',['Auth'],[
    // Método será executado depois da execução do Middleware
      Construtor(Controller('/OficinaInformatica','create',[],[],'Falar com a Oficina')),
-     Controller('/OficinaInformatica','AssistenciaComputadores',[],[],'Arrumo Computadores'),
-     Controller('/OficinaInformatica','Venda',[],[],'Vendo Perifericos'),
-     Controller('/OficinaInformatica','Reballing',[],[],'Reballing em Procesadores'),
-     Controller('/OficinaInformatica','ConsertoNotebooks',[],[],'Conserto de Notebooks'),
-     Controller('/OficinaInformatica','ConsertoLCD',[],[],'Conserto de Monitore LCD'),
-     Controller('/OficinaInformatica','ConsertoLED',[],[],'Conserto de Monitore Led'),
-     Controller('/OficinaInformatica','impressoras',[],[],'Manutenção de impressoras'),
-     Controller('/OficinaInformatica','impressorasFiscais',[],[],'Manutenção de Impressoras Fiscais'),
-     Controller('/OficinaInformatica','ManutencaoCelulares',[],[],'Manutenção de Celulares'),
-     Controller('/OficinaInformatica','Eletronica',[],[],'Serviços de eletronica'),
-     Controller('/OficinaInformatica','WatsApp',[],[],'Grupo no WatsApp'),
-     Controller('/OficinaInformatica','Email',[],[],'Envie um email para a oficina')
+     Controller('/Oficinadozezinho','AssistenciaComputadores',[],[],'Arrumo Computadores'),
+     Controller('/Oficinadozezinho','Venda',[],[],'Vendo Perifericos'),
+     Controller('/Oficinadozezinho','Reballing',[],[],'Reballing em Procesadores'),
+     Controller('/Oficinadozezinho','ConsertoNotebooks',[],[],'Conserto de Notebooks'),
+     Controller('/Oficinadozezinho','ConsertoLCD',[],[],'Conserto de Monitores LCD'),
+     Controller('/Oficinadozezinho','ConsertoLED',[],[],'Conserto de Monitores Led'),
+     Controller('/Oficinadozezinho','impressoras',[],[],'Manutenção de impressoras'),
+     Controller('/Oficinadozezinho','impressorasFiscais',[],[],'Manutenção de Impressoras Fiscais'),
+     Controller('/Oficinadozezinho','ManutencaoCelulares',[],[],'Manutenção de Celulares'),
+     Controller('/Oficinadozezinho','Eletronica',[],[],'Serviços de eletronica'),
+     Controller('/Oficinadozezinho','WatsApp',[],[],'Grupo no WatsApp'),
+     Controller('/Oficinadozezinho','Email',[],[],'Envie um email para a oficina')
  ],[
 
      // Método que não será validado pelo Middleware da Rota, Em referência a Except do Laravel

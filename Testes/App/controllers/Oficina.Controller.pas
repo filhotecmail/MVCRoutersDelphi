@@ -114,7 +114,7 @@ begin
 end;
 
 initialization
- RegisterClassAlias(TOficinaInformatica,'/OficinaInformatica');
+ RegisterClassAlias(TOficinaInformatica,'/Oficinadozezinho');
 Finalization
  UnRegisterClass( TOficinaInformatica );
 

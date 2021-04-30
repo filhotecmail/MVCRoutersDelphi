@@ -5,15 +5,14 @@ interface
 uses Rtti, Routers.ConcreteClass.Obj;
 
  function Construtor( Const ABuildMethodType: TMethodsClass ): TMethodsClass;
- function Route(AControllerAlias: String;
-             Method: String; AParams: Array of TValue;
-             AMidleWareNames: TMidlewares = nil;
-             const AMethodAlias: String = ''; ARouteType: TRouterType = AController): TMethodsClass;
+
+ function Route(AControllerAlias: String; Method: String; AParams: Array of TValue;
+  AMidleWareNames: TMidlewares = nil; const AMethodAlias: String = '';
+  ARouteType: TRouterType = AController): TMethodsClass;
 
  function Controller(AControllerAlias: String;
-             Method: String; const AParams: Array of TValue;
-             AMidleWareNames: TMidlewares = nil;
-             const AMethodAlias: String = ''; ARouteType: TRouterType = AController): TMethodsClass;
+ Method: String; const AParams: Array of TValue; AMidleWareNames: TMidlewares = nil;
+ const AMethodAlias: String = ''; ARouteType: TRouterType = AController): TMethodsClass;
 
 // function get(AControllerAlias: String;
 //             Method: String; AParams: Array of TValue;
@@ -69,10 +68,9 @@ begin
  Result:= ABuildMethodType;
 end;
 
-function Route(AControllerAlias: String;
-             Method: String; AParams: Array of TValue;
-             AMidleWareNames: TMidlewares = nil;
-             const AMethodAlias: String = ''; ARouteType: TRouterType = AController): TMethodsClass;
+function Route(AControllerAlias: String; Method: String; AParams: Array of TValue;
+ AMidleWareNames: TMidlewares = nil;const AMethodAlias: String = '';
+ ARouteType: TRouterType = AController): TMethodsClass;
 begin
 
 end;

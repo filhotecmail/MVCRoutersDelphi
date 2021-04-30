@@ -111,7 +111,7 @@
         </DCCReference>
         <DCCReference Include="..\Lib\Controller.IInterfaces.pas"/>
         <DCCReference Include="..\Lib\Routers.ConcreteClass.Obj.pas"/>
-        <DCCReference Include="..\Testes\App\controllers\Clientes.Controller.pas"/>
+        <DCCReference Include="..\Testes\App\controllers\Oficina.Controller.pas"/>
         <DCCReference Include="..\Testes\App\routers\Routers.Facade.pas"/>
         <DCCReference Include="..\Testes\App\Views\Clientes.view.pas">
             <Form>FVisaoCliente</Form>

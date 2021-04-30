@@ -35,9 +35,9 @@ end;
 
 procedure TForm24.btn4Click(Sender: TObject);
 begin
-  Group('Clientes','CriaControllerClientes',[]);
-  Group('Clientes','Metodnaexcessao',[]);
-  Group('Clientes','TesteSubmit',[]);
+  Group('Oficina Zezinhos Informatica Ltda.ME','Falar com a Oficina',[]);
+  Group('Oficina Zezinhos Informatica Ltda.ME','Arrumo Computadores',[]);
+  Group('Oficina Zezinhos Informatica Ltda.ME','Vendo Perifericos',[]);
 end;
 
 procedure TForm24.btn5Click(Sender: TObject);
