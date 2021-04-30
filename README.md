@@ -253,6 +253,15 @@ end.
 
 ```
 
+# Cobrindo uma Rota com o Método Construtor.
+
+  Rotas podem ser cobertas pelo método Construtor , ao ser informado, você diz que aquela rota vai executar um método que é um construtor do objeto.
+ ```
+  Construtor( Rota(  Nome da rota, Método, Parametros, Um Apelido para a Rota )  );   
+
+```
+
+
 
     
 
