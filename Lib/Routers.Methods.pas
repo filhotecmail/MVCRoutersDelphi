@@ -4,7 +4,8 @@ interface
 
 uses Rtti, Routers.ConcreteClass.Obj;
 
-function Route(AControllerAlias: String;
+ function Construtor( Const ABuildMethodType: TMethodsClass ): TMethodsClass;
+ function Route(AControllerAlias: String;
              Method: String; AParams: Array of TValue;
              AMidleWareNames: TMidlewares = nil;
              const AMethodAlias: String = ''; ARouteType: TRouterType = AController): TMethodsClass;
@@ -52,6 +53,11 @@ function Route(AControllerAlias: String;
 
 implementation
 { TControllersRoute }
+
+function Construtor( Const ABuildMethodType: TMethodsClass ): TMethodsClass;
+begin
+ Result:= ABuildMethodType;
+end;
 
 function Route(AControllerAlias: String;
              Method: String; AParams: Array of TValue;

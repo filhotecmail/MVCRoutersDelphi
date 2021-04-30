@@ -9,6 +9,7 @@ interface
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+    procedure Submit;
     procedure OnClick( Sender:  TObject );
     class function New:TClientesController;
   end;
@@ -35,6 +36,11 @@ end;
 procedure TClientesController.OnClick(Sender: TObject);
 begin
 
+end;
+
+procedure TClientesController.Submit;
+begin
+ ShowMessage('Chamou Submit do controller criado');
 end;
 
 initialization

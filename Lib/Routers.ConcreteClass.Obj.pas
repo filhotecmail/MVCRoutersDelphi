@@ -22,15 +22,18 @@ interface
     FMiddlewareNames: TMidlewares;
     FMethodAlias: String;
     FRouterType: TRouterType;
+    FIsConstrutor: Boolean;
     procedure SetAClassName(const Value: String);
     procedure SetMethodName(const Value: String);
     procedure SetMethodParams(const Value: TmethodParams);
     procedure SetMiddlewareNames(const Value: TMidlewares);
     procedure SetMethodAlias(const Value: String);
     procedure SetRouterType(const Value: TRouterType);
+    procedure SetIsConstrutor(const Value: Boolean);
   published
       property AClassName: String read FAClassName write SetAClassName;
       property MethodName: String read FMethodName write SetMethodName;
+      property IsConstrutor: Boolean read FIsConstrutor write SetIsConstrutor;
       property MethodAlias: String read FMethodAlias write SetMethodAlias;
       property RouterType: TRouterType read FRouterType write SetRouterType;
       property MethodParams: TmethodParams read FMethodParams write SetMethodParams;
@@ -113,6 +116,8 @@ interface
 
  var RoutersController:TControllersRoute;
  implementation
+
+uses Controller.ConcreteObj;
 
   var FRoutersInstance:  TDictionary<String,TValue>;
 
@@ -250,27 +255,24 @@ end;
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
   ConstrutorName: String; AParamsConstructor: Array of TValue): TValue;
  var FClass: TPersistentClass;
+     FObject: TObject;
      RttiContext: TRttiContext;
      RttiInstanceType: TRttiInstanceType;
      RttiMethod: TRttiMethod;
      Instance: TValue;
 begin
-  FClass:= GetClass(AClassName);
+  FClass:= FindClass(AClassName);
+  RttiContext := TRttiContext.Create;
   RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-  FRoutersInstance.AddOrSetValue(AClassName,FClass);
   RttiMethod := RttiInstanceType.GetMethod(Method);
-  Result:= RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
-//  if AConstrutor then
-//  begin
-//   RttiMethod := RttiInstanceType.GetMethod(ConstrutorName);
-//   Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor);
-//
-//   RttiMethod := RttiInstanceType.GetMethod(Method);
-//   Result:= RttiMethod.Invoke(FRoutersInstance.Items[AClassName], AParams);
-//  end else
-//  begin
-//
-//  end;
+  if AConstrutor then
+ begin
+    Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]);
+  if not FRoutersInstance.ContainsKey(AClassName) then
+         FRoutersInstance.AddOrSetValue(AClassName,Instance);
+ end;
+  Instance:= RttiInstanceType.MetaclassType;
+  Result:= RttiMethod.Invoke( FRoutersInstance.Items[AClassName] , AParams);
 end;
 
 function TControllersRoute.FreeRoute(const AClassName: String): TControllersRoute;
@@ -386,12 +388,17 @@ end;
 
 function TMethodsClass.ExecuteMethod: TValue;
 begin
- Result:= RoutersController.Route(FAClassName,FMethodName,FMethodParams,True,'new',[],FMiddlewareNames,MethodAlias );
+ Result:= RoutersController.Route(FAClassName,FMethodName,FMethodParams,IsConstrutor,'',[],FMiddlewareNames,MethodAlias );
 end;
 
 procedure TMethodsClass.SetAClassName(const Value: String);
 begin
   FAClassName := Value;
+end;
+
+procedure TMethodsClass.SetIsConstrutor(const Value: Boolean);
+begin
+  FIsConstrutor := Value;
 end;
 
 procedure TMethodsClass.SetMethodAlias(const Value: String);

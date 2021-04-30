@@ -10,7 +10,7 @@ implementation
 initialization
  RegisterGroup('Clientes',[],[
  Controller('/ClientesController','create',[],[],'CriaControllerClientes'),
- Controller('/ClientesController','submit',[],[],'TesteSubmit')
+ Controller('/ClientesController','Submit',[],[],'TesteSubmit')
  ] );
 
 Finalization
