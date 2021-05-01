@@ -2,17 +2,17 @@ unit Oficina.Model;
 
 interface
 
-uses Model.IInterfaces, Model.ObjectConcrete,System.SysUtils,System.Generics.Defaults,Rtti;
+uses Model.IInterfaces, Model.ObjectConcrete,System.SysUtils,System.Generics.Defaults,Rtti,
+     System.Classes,vcl.Dialogs;
 
   Type
      TOficinaModel = Class(TModelAbstract)
-
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
-
   published
     function Get(AParams: System.TArray<TValue>): TValue; override;
+
  End;
 
 implementation
@@ -21,14 +21,15 @@ implementation
 
 procedure TOficinaModel.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
  with propriedades do
  begin
   TableName := 'CADCLIENTES';
   PrimaryKey:= 'ID';
   Generator:= 'GEN_CADCLIENTES_ID';
-  Fillable := ['ID','NOME','Data'];
+  Fillable := ['ID','NOME'];
  end;
+ //inherited AfterOpen('{"Teste":{ "Nome":"Carlos Alberto Dias" }}');
 end;
 
 procedure TOficinaModel.BeforeDestruction;
@@ -42,4 +43,8 @@ begin
  Result := Self;
 end;
 
+ Initialization
+  RegisterClassAlias(TOficinaModel,'Oficina');
+ Finalization
+  UnRegisterClass(TOficinaModel);
 end.

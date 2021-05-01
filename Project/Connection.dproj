@@ -120,6 +120,13 @@
         <DCCReference Include="..\Lib\Routers.Middleware.Abstract.pas"/>
         <DCCReference Include="..\Lib\Routers.Methods.pas"/>
         <DCCReference Include="..\Lib\Controller.ConcreteObj.pas"/>
+        <DCCReference Include="..\Lib\Helpers\System.Helper.pas"/>
+        <DCCReference Include="..\Lib\Model.ObjectConcrete.pas"/>
+        <DCCReference Include="..\Lib\Model.IInterfaces.pas"/>
+        <DCCReference Include="..\Testes\App\Models\Oficina.Model.pas"/>
+        <DCCReference Include="..\Lib\Notify.Subscribe.pas"/>
+        <DCCReference Include="..\Lib\Observers.IInterfaces.pas"/>
+        <DCCReference Include="..\Lib\View.Abstract.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

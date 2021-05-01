@@ -5,10 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids,Rtti,Json,
-  System.Helper;
+  System.Helper, View.Abstract;
 
 type
-  TFVisaoCliente = class(TForm)
+  TFVisaoCliente = class(TAbstractView)
     btn1: TButton;
     btn2: TButton;
     ds1: TDataSource;
@@ -17,8 +17,10 @@ type
     { Private declarations }
   public
     { Public declarations }
+
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+    procedure AfterOpen(Obj: TValue); override;
   end;
 
 implementation
@@ -26,16 +28,21 @@ implementation
 { TFVisaoCliente }
 procedure TFVisaoCliente.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
 
+end;
+
+procedure TFVisaoCliente.AfterOpen(Obj: TValue);
+begin
+  inherited;
+  ShowMessage('Notificado pelo Modelo');
 end;
 
 procedure TFVisaoCliente.BeforeDestruction;
 begin
-  inherited;
+  inherited BeforeDestruction;
 
 end;
-
   initialization
   RegisterClassAlias(TFVisaoCliente,'/Oficina.View')
   Finalization

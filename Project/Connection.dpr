@@ -13,7 +13,14 @@ uses
   Routers.Auth.Midleware in '..\Testes\App\midlewares\Routers.Auth.Midleware.pas',
   Routers.Middleware.Abstract in '..\Lib\Routers.Middleware.Abstract.pas',
   Routers.Methods in '..\Lib\Routers.Methods.pas',
-  Controller.ConcreteObj in '..\Lib\Controller.ConcreteObj.pas';
+  Controller.ConcreteObj in '..\Lib\Controller.ConcreteObj.pas',
+  System.Helper in '..\Lib\Helpers\System.Helper.pas',
+  Model.ObjectConcrete in '..\Lib\Model.ObjectConcrete.pas',
+  Model.IInterfaces in '..\Lib\Model.IInterfaces.pas',
+  Oficina.Model in '..\Testes\App\Models\Oficina.Model.pas',
+  Notify.Subscribe in '..\Lib\Notify.Subscribe.pas',
+  Observers.IInterfaces in '..\Lib\Observers.IInterfaces.pas',
+  View.Abstract in '..\Lib\View.Abstract.pas';
 
 {$R *.res}
 begin

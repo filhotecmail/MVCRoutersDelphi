@@ -33,8 +33,9 @@ implementation
 { TOficinaInformatica }
 procedure TOficinaInformatica.AfterConstruction;
 begin
-  inherited;
-  ShowMessage('Controller Criado');
+ inherited;
+  Models(['Oficina'],['/Oficina.View']);
+
 end;
 
 function TOficinaInformatica.AssistenciaComputadores: TValue;
@@ -45,7 +46,7 @@ end;
 procedure TOficinaInformatica.BeforeDestruction;
 begin
   inherited;
-  // RoutersController.FreeRoute('/ClientesView');
+
 end;
 
 
@@ -82,6 +83,11 @@ end;
 function TOficinaInformatica.impressorasFiscais: TValue;
 begin
 
+end;
+
+function TOficinaInformatica.ListaServicos: Tvalue;
+begin
+ Result := View('/Oficina.View',nil,'/Oficinadozezinho');
 end;
 
 function TOficinaInformatica.ManutencaoCelulares: TValue;
