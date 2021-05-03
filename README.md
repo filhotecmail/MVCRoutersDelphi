@@ -322,6 +322,38 @@ end;
 ``` 
 Você pode passar tanto o Nome do Método da rota , ou o apelido que designou para o Método.
 
+# MVC
+  Seguindo como inspração o Modelo MVC do Laravel , teremos o primeiro elemento registrado nas rotas do facade. O Controller.
+  MVC é o acrônimo de Model-View-Controller (em português: Arquitetura Modelo-Visão-Controle - MVC) é um padrão de projeto de software,[1] ou padrão de arquitetura de software formulado na década de 1970,[2] focado no reuso de código e a separação de conceitos em três camadas interconectadas, onde a apresentação dos dados e interação dos usuários (front-end) são separados dos métodos que interagem com o banco de dados (back-end).[2]
+
+Normalmente usado para o desenvolvimento de interfaces de usuário que divide uma aplicação em partes (camadas/componentes) interconectadas. Isto é feito para separar representações de informação internas dos modos como a informação é apresentada para e aceita pelo usuário,[3][4] levando ao desenvolvimento paralelo de maneira eficiente.
+
+Os componentes do MVC
+Tradicionalmente usado para interfaces gráficas de usuário (GUIs), esta arquitetura tornou-se popular para projetar aplicações web e até mesmo para aplicações móveis, para desktop e para outros clientes.[6] Linguagens de programação populares como Java, C#, Object Pascal/Delphi, Ruby, PHP, JavaScript e outras possuem frameworks MVC populares que são atualmente usados no desenvolvimentos de aplicações web.
+
+Camada de modelo ou da lógica da aplicação (Model)
+Modelo é a ponte entre as camadas Visão (View) e Controle (Controller), consiste na parte lógica da aplicação, que gerencia o comportamento dos dados através de regras de negócios, lógica e funções. Esta fica apenas esperando a chamada das funções,  que permite o acesso para os dados serem coletados, gravados e, exibidos.
+
+É o coração da execução, responsável por tudo que a aplicação vai fazer a partir dos comandos da camada de controle em um ou mais elementos de dados, respondendo a perguntas sobre o sua condição e a instruções para mudá-las. O modelo sabe o que o aplicativo quer fazer e é a principal estrutura computacional da arquitetura, pois é ele quem modela o problema que está se tentando resolver. Modela os dados e o comportamento por trás do processo de negócios. Se preocupa apenas com o armazenamento, manipulação e geração de dados. É um encapsulamento de dados e de comportamento independente da apresentação.
+
+Um modelo (model) armazena dados e notifica suas visões e controladores associados quando há uma mudança em seu estado. Estas notificações permitem que as visões produzam saídas atualizadas e que os controladores alterem o conjunto de comandos disponíveis. Uma implementação passiva do MVC monta estas notificações, devido a aplicação não necessitar delas ou a plataforma de software não suportá-las.
+
+# O Controller
+
+  Como mostra nosso Exemplo o Controller irá fazer o Recurso da herança, um controller Base do Core.
+  ![image](https://user-images.githubusercontent.com/18727307/116881835-22443080-abfa-11eb-9ff8-279f12b834fb.png)
+
+Podemos utilizar o Método AfterConstructor da Classe para dizer ao controller seus recursos.
+
+![image](https://user-images.githubusercontent.com/18727307/116881990-4dc71b00-abfa-11eb-90f9-de532765c251.png)
+
+Perceba que a Base nos da um método para registrar Modelos a partir do nome do Modelo, isso faz com que o Controller não tenha uma injeção direta do Modelo, ou da clase real.
+O Mecanismo por RTTI irá instanciar o Modelo.
+
+Outros recursos podem ser registrados através do Controlller comoo apresenta o exemplo acima, como um ContainnerService para a aplicação.  
+
+  fonte.: https://pt.wikipedia.org/wiki/MVC
+
 # Container de serviços 
   Baseado no modelo Laravel.
 
