@@ -13,8 +13,6 @@ interface
   end;
 
 implementation
-
-
  { TOficinaServicesContainner }
 
 procedure TOficinaServicesContainner.AfterConstruction;
@@ -31,7 +29,7 @@ end;
 
 function TOficinaServicesContainner.Get(Arg: TArray<TValue>): Variant;
 begin
- Result := Executemethod<String>('GetAll',[]);
+ Result :=  Executemethod<String>('GetAll',[]);
 end;
 
 class function TOficinaServicesContainner.New: TOficinaServicesContainner;

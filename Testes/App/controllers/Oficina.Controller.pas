@@ -94,7 +94,6 @@ function TOficinaInformatica.ListaServicos: Tvalue;
 var Values: TArray<TValue>;
 begin
  Values := ['Carlos'];
-// ShowMessage( GetValue<String>('Oficina','Get',[ TValue.From(Values) ]));
  {Recupera dentro de uma Lista de containners registrados}
  ShowMessage(GetContainnersServices<String>('OficinaServicecontainner','Get',[ TValue.From(Values) ]));
  Result := View('/Oficina.View',nil,'/Oficinadozezinho');
