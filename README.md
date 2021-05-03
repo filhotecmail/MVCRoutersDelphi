@@ -342,10 +342,15 @@ begin
   Models(['Oficina']);
   {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
   ContainnersServices(['OficinaServicecontainner'],['Oficina']);
-  {Recupera dentro de uma Lista de containners registrados}
-  FContainner:= GetContainnersServices('OficinaServicecontainner');
 end;
 
+```
+
+Recuperando um Containenr de serviços.
+
+```Delphi
+  {Recupera dentro de uma Lista de containners registrados}
+  FContainner:= GetContainnersServices('OficinaServicecontainner');
 ```
 
     
