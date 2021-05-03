@@ -322,7 +322,31 @@ end;
 ``` 
 Você pode passar tanto o Nome do Método da rota , ou o apelido que designou para o Método.
 
+# Container de serviços 
+  Baseado no modelo Laravel.
 
+O container de serviço Laravel é uma ferramenta poderosa para gerenciar dependências de classes e executar injeção de dependências. A injeção de dependência é uma frase sofisticada que essencialmente significa o seguinte: as dependências da classe são "injetadas" na classe por meio do construtor ou, em alguns casos, dos métodos "setter".
+Sua finalidade é fazer com que o controller possa recuperar dados em Containners de Serviços providos conectados a um Modelo de negócio.
+Podemos ter Containnners de serviços personalizados para diferentes ocasiões.
+
+Mais sobre os services Containners.
+https://laravel.com/docs/8.x/container
+
+```Delphi
+implementation
+{ TOficinaInformatica }
+procedure TOficinaInformatica.AfterConstruction;
+begin
+ inherited;
+  {registra na Lista os Models que o controller irá realizar uma conversa}
+  Models(['Oficina']);
+  {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
+  ContainnersServices(['OficinaServicecontainner'],['Oficina']);
+  {Recupera dentro de uma Lista de containners registrados}
+  FContainner:= GetContainnersServices('OficinaServicecontainner');
+end;
+
+```
 
     
 
