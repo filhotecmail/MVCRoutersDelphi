@@ -22,6 +22,7 @@ implementation
 procedure TOficinaModel.AfterConstruction;
 begin
   inherited AfterConstruction;
+
  with propriedades do
  begin
   TableName := 'CADCLIENTES';

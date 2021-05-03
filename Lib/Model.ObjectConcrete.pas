@@ -39,9 +39,11 @@ type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
     procedure OnError(Obj: TValue);virtual;
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+    function Get(AParams: TArray<TValue>):TValue; virtual; Abstract;
+    function Post(AParams: TArray<TValue> = nil):TValue; virtual; Abstract;
     published
     property Propriedades:TProps read FPropriedades write SetPropriedades;
-    function Get(AParams: TArray<TValue>):TValue; virtual; Abstract;
+
   end;
 
   implementation
