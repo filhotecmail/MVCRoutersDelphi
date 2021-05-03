@@ -371,9 +371,9 @@ procedure TOficinaInformatica.AfterConstruction;
 begin
  inherited;
   {registra na Lista os Models que o controller irá realizar uma conversa}
-  Models(['Oficina']);
-  {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
-  ContainnersServices(['OficinaServicecontainner'],['Oficina']);
+  Models(['Oficina'],[ [Self,nil] ]);
+ {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
+  ContainnersServices(['OficinaServicecontainner'],['Oficina'],['New'],[ [] ]);
 end;
 
 ```
