@@ -4,6 +4,8 @@ interface
   uses System.classes,Controller.IInterfaces, Vcl.Dialogs, Controller.ConcreteObj,Rtti;
 
   type TOficinaInformatica = class(TControllerBase)
+  strict private
+    FContainner: TValue;
   private
 
   public
@@ -34,8 +36,12 @@ implementation
 procedure TOficinaInformatica.AfterConstruction;
 begin
  inherited;
-  Models(['Oficina'],['/Oficina.View']);
-  ProviderService(['OficinaServicecontainner'],['Oficina']);
+  {registra na Lista os Models que o controller irá realizar uma conversa}
+  Models(['Oficina']);
+  {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
+  ContainnersServices(['OficinaServicecontainner'],['Oficina']);
+  {Recupera dentro de uma Lista de containners registrados}
+  //FContainner:= GetContainnersServices('OficinaServicecontainner');
 end;
 
 function TOficinaInformatica.AssistenciaComputadores: TValue;

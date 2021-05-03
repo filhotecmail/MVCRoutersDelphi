@@ -3,14 +3,14 @@ unit Controller.ConcreteObj;
 interface
   uses System.classes,Controller.IInterfaces,Rtti,Vcl.Forms,System.SysUtils,
   Model.ObjectConcrete, Model.IInterfaces,System.Generics.Collections,
-  Observers.IInterfaces, View.Abstract;
+  Observers.IInterfaces, View.Abstract, Services.Containner.ObjConcrete;
 
 type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
   strict private
     FClass: TPersistentClass;
     FModels: TDictionary<String,TValue>;
     FObservers: TDictionary<String,TValue>;
-    FProvidersService: TDictionary<String,TValue>;
+    FContainnersServices: TDictionary<String,TValue>;
   private
     FModelName: string;
   public
@@ -30,7 +30,8 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
      ///   possamos recuperar provedores de serviços registrados para o Modelo.
      ///
      /// </summary>
-    function ProviderService(AProviderServiceName: TArray<String>; AModels: TArray<String>):TValue;
+    function ContainnersServices(AProviderServiceName: TArray<String>; AModels: TArray<String>):TValue;
+    function ServicesContainner(AContainnerName: string):TValue;
     function OBServers( Const AObserverNames: TArray<String> ):TControllerBase; virtual;
 End;
 
@@ -59,7 +60,7 @@ begin
   inherited;
    FModels:= TDictionary<String,TValue>.create;
    FObservers:= TDictionary<String,TValue>.create;
-   FProvidersService:= TDictionary<String,TValue>.create;
+   FContainnersServices:= TDictionary<String,TValue>.create;
 end;
 
 
@@ -68,7 +69,7 @@ begin
   inherited;
   FreeAndNil( FModels );
   FreeAndNil( FObservers );
-  FreeAndNil( FProvidersService );
+  FreeAndNil( FContainnersServices );
 end;
 
 function TControllerBase.Get(const AValues: Tarray<TValue>): TValue;
@@ -123,7 +124,7 @@ begin
 
 end;
  {$REGION 'Area do Provedor de serviços'}
-function TControllerBase.ProviderService(AProviderServiceName,
+function TControllerBase.ContainnersServices(AProviderServiceName,
   AModels: TArray<String>): TValue;
    var FClass: TPersistentClass;
       FObject: TObject;
@@ -134,12 +135,21 @@ function TControllerBase.ProviderService(AProviderServiceName,
       I,X: Integer;
 begin
 
-
+  Result:= FContainnersServices;
 end;
  {$ENDREGION}
 function TControllerBase.Render(): TValue;
 begin
  Result := Self;
+end;
+
+function TControllerBase.ServicesContainner(AContainnerName: string): TValue;
+begin
+ Result:= nil;
+ if FContainnersServices.ContainsKey(AContainnerName) then
+    Result := FContainnersServices.Items[AContainnerName]
+    else
+    raise Exception.Create('Não existe um ServicesContainner registrado na lista com o nome de '+AContainnerName);
 end;
 
 end.
