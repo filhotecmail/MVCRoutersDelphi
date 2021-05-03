@@ -1,4 +1,4 @@
-unit Provider.Service.IInterfaces;
+unit Services.Containner.IInterfaces;
 
 interface
  uses System.Classes,System.SysUtils,System.Generics.Collections;

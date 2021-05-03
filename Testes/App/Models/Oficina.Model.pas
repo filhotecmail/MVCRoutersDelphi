@@ -30,7 +30,7 @@ begin
   Generator:= 'GEN_CADCLIENTES_ID';
   Fillable := ['ID','NOME'];
  end;
- //inherited AfterOpen('{"Teste":{ "Nome":"Carlos Alberto Dias" }}');
+
 end;
 
 procedure TOficinaModel.BeforeDestruction;

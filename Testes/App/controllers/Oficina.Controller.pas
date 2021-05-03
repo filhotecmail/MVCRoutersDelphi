@@ -35,7 +35,7 @@ procedure TOficinaInformatica.AfterConstruction;
 begin
  inherited;
   Models(['Oficina'],['/Oficina.View']);
-  ProviderService(['OficinaServiceprovider'],['Oficina']);
+  ProviderService(['OficinaServicecontainner'],['Oficina']);
 end;
 
 function TOficinaInformatica.AssistenciaComputadores: TValue;

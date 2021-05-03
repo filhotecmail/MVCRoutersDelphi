@@ -1,8 +1,8 @@
-unit Provider.Service.ObjConcrete;
+unit Services.Containner.ObjConcrete;
 
 interface
   uses System.Classes,System.SysUtils,System.Generics.Collections,
-  Provider.Service.IInterfaces,Data.DB;
+  Services.Containner.IInterfaces,Data.DB;
 
   type TServiceProvider = class(TInterfacedPersistent,IServiceProvider)
   private

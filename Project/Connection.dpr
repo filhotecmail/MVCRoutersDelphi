@@ -20,7 +20,10 @@ uses
   Oficina.Model in '..\Testes\App\Models\Oficina.Model.pas',
   Notify.Subscribe in '..\Lib\Notify.Subscribe.pas',
   Observers.IInterfaces in '..\Lib\Observers.IInterfaces.pas',
-  View.Abstract in '..\Lib\View.Abstract.pas';
+  View.Abstract in '..\Lib\View.Abstract.pas',
+  Services.Containner.IInterfaces in '..\Lib\Services.Containner.IInterfaces.pas',
+  Services.Containner.ObjConcrete in '..\Lib\Services.Containner.ObjConcrete.pas',
+  Oficina.Services.Containner in '..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas';
 
 {$R *.res}
 begin

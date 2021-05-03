@@ -127,6 +127,9 @@
         <DCCReference Include="..\Lib\Notify.Subscribe.pas"/>
         <DCCReference Include="..\Lib\Observers.IInterfaces.pas"/>
         <DCCReference Include="..\Lib\View.Abstract.pas"/>
+        <DCCReference Include="..\Lib\Services.Containner.IInterfaces.pas"/>
+        <DCCReference Include="..\Lib\Services.Containner.ObjConcrete.pas"/>
+        <DCCReference Include="..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
