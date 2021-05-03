@@ -14,6 +14,7 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
     FObservers: TDictionary<String,TValue>;
     FContainnersServices: TDictionary<String,TValue>;
     function ExcuteMethod<T>( AInstance: TObject; AMethodName: String; AmethodParams: Array of TValue ):T;
+    function Model( Const AModelName: string ):TValue; overload;
   private
     FModelName: string;
   public
@@ -32,7 +33,6 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
     ///   Recupera um Valor do Tipo Variant de um Método que será executado em um Modelo
     /// </summary>
     function GetValue<T>(AModelName: String; AModelMethod: String; AMethodParams: Array of TValue):T; overload;
-    function Model( Const AModelName: string ):TValue; overload;
      /// <summary>
      ///  verificar Se existe a classe registrada ServiceProider Informada.
      ///   verificar se existe um Model que possa corresponder ao provedor de serviços
@@ -175,10 +175,10 @@ end;
 function TControllerBase.GetContainnersServices(AContainnerName: string): TValue;
 begin
  Result:= nil;
- if FContainnersServices.ContainsKey(AContainnerName) then
-    Result := FContainnersServices.Items[AContainnerName]
-    else
-    raise Exception.Create('Não existe um ServicesContainner registrado na lista com o nome de '+AContainnerName);
+// if FContainnersServices.ContainsKey(AContainnerName) then
+//    Result := FContainnersServices.Items[AContainnerName]
+//    else
+//    raise Exception.Create('Não existe um ServicesContainner registrado na lista com o nome de '+AContainnerName);
 end;
 
 end.

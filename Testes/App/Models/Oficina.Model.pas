@@ -32,6 +32,7 @@ begin
   PrimaryKey:= 'ID';
   Generator:= 'GEN_CADCLIENTES_ID';
   Fillable := ['ID','NOME'];
+  SetConnection:= 'Firebird';
  end;
 
 end;
