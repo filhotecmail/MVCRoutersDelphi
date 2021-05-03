@@ -5,12 +5,15 @@ interface
   Model.ObjectConcrete, Model.IInterfaces,System.Generics.Collections,
   Observers.IInterfaces, View.Abstract, Services.Containner.ObjConcrete;
 
+  type TArrayOfParams = Array of TValue;
+
 type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
   strict private
     FClass: TPersistentClass;
-    FModels: TDictionary<String,TValue>;
+    FModels: TDictionary<String,TObject>;
     FObservers: TDictionary<String,TValue>;
     FContainnersServices: TDictionary<String,TValue>;
+    function ExcuteMethod<T>( AInstance: TObject; AMethodName: String; AmethodParams: Array of TValue ):T;
   private
     FModelName: string;
   public
@@ -18,9 +21,18 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
     procedure BeforeDestruction; override;
     function Render():TValue; virtual;
     function Get(const AValues: Tarray<TValue>):TValue; virtual;
-    function Models(AModelsNames: TArray<String>; AObservers: TArray<String>):TControllerBase;
-    function Model( Const AModelName: string ):TValue;
-
+    /// <summary>
+    ///   Construtor dos Modelos, o Sistema irá construir as instâncias de Modelos resgistrados para os controllers.
+    ///  Irá armazenar em uma Lista os Modelos e sua Instância
+    ///  AParamsConstructor: TArray<TArrayOfParams> é um Array de parametros para cada modelo Iterado.
+    ///   [ 'Nome do Modelo', Modelo 2  ] , [ [ Parametos do Modelo 1  ],[ Parametos do Modelo 2  ]   ]
+    /// </summary>
+    function Models(AModelsNames: TArray<String>; AParamsConstructor: TArray<TArrayOfParams>):TControllerBase;
+    /// <summary>
+    ///   Recupera um Valor do Tipo Variant de um Método que será executado em um Modelo
+    /// </summary>
+    function GetValue<T>(AModelName: String; AModelMethod: String; AMethodParams: Array of TValue):T; overload;
+    function Model( Const AModelName: string ):TValue; overload;
      /// <summary>
      ///  verificar Se existe a classe registrada ServiceProider Informada.
      ///   verificar se existe um Model que possa corresponder ao provedor de serviços
@@ -31,7 +43,7 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
      ///
      /// </summary>
     function ContainnersServices(AProviderServiceName: TArray<String>; AModels: TArray<String>):TValue;
-    function ServicesContainner(AContainnerName: string):TValue;
+    function GetContainnersServices(AContainnerName: string):TValue;
     function OBServers( Const AObserverNames: TArray<String> ):TControllerBase; virtual;
 End;
 
@@ -58,7 +70,7 @@ implementation
 procedure TControllerBase.AfterConstruction;
 begin
   inherited;
-   FModels:= TDictionary<String,TValue>.create;
+   FModels:= TDictionary<String, TObject>.create;
    FObservers:= TDictionary<String,TValue>.create;
    FContainnersServices:= TDictionary<String,TValue>.create;
 end;
@@ -80,13 +92,18 @@ end;
 
 function TControllerBase.Model(const AModelName: string): TValue;
 begin
- if not FModels.ContainsKey(AModelName) then
- begin
-    Result := FModels.Items[AModelname];
- end;
+ Result:= nil;
+ if FModels.ContainsKey(AModelName) then
+    Result := FModels.Items[AModelname]
+    else raise Exception.Create('Não existe um model registrado na lista com esse nome '+AModelName);
 end;
 
-function TControllerBase.Models(AModelsNames: TArray<String>; AObservers: TArray<String>): TControllerBase;
+function TControllerBase.GetValue<T>(AModelName: String; AModelMethod: String; AMethodParams: Array of TValue): T;
+begin
+ Result:= ExcuteMethod<T>( Model(AModelName).AsObject ,AModelMethod,AMethodParams );
+end;
+
+function TControllerBase.Models(AModelsNames: TArray<String>; AParamsConstructor: TArray<TArrayOfParams>): TControllerBase;
 var FClass: TPersistentClass;
     FObject: TObject;
     RttiContext: TRttiContext;
@@ -98,6 +115,7 @@ var FClass: TPersistentClass;
   RttiContextObserver: TRttiContext;
   FClassObserver: TPersistentClass;
   RttiInstanceTypeObserver: TRttiInstanceType;
+
 begin
  Result := Self;
  for I := Low(AModelsNames) to High(AModelsNames) do
@@ -107,14 +125,9 @@ begin
     RttiContext := TRttiContext.Create;
     RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
     Instance := RttiInstanceType;
-    FModels.Add(AModelsNames[i],Instance);
-
-    FObservers.Add(AModelsNames[i],AObservers[i]);
-    FClassObserver:= FindClass(AObservers[i]);
-    RttiContextObserver := TRttiContext.Create;
-    RttiInstanceTypeObserver:= RttiContext.FindType(FClassObserver.UnitName+'.'+FClassObserver.ClassName).AsInstance;
-    RttiMethod := RttiInstanceType.GetMethod('create');
-    Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[nil,FClassObserver]);
+    RttiMethod := RttiInstanceType.GetMethod('Create');
+    FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor[I]).AsObject;
+    FModels.Add(AModelsNames[i],FObject);
    end;
 end;
 
@@ -134,16 +147,32 @@ function TControllerBase.ContainnersServices(AProviderServiceName,
       Instance: TValue;
       I,X: Integer;
 begin
-
-  Result:= FContainnersServices;
+ Result:= FContainnersServices;
 end;
- {$ENDREGION}
+ function TControllerBase.ExcuteMethod<T>(AInstance: TObject; AMethodName: String;
+  AmethodParams: array of TValue): T;
+var  RttiContext: TRttiContext;
+     RttiInstanceType: TRttiInstanceType;
+     RttiMethod: TRttiMethod;
+     InstanceOf: TValue;
+     FValue: TValue;
+begin
+  RttiContext := TRttiContext.Create;
+  RttiInstanceType := RttiContext.FindType(AInstance.UnitName+'.'+AInstance.ClassName).AsInstance;
+  RttiMethod := RttiInstanceType.GetMethod(AMethodName);
+  InstanceOf:= RttiInstanceType.MetaclassType;
+ if RttiMethod <> nil then
+   FValue:= RttiMethod.Invoke( AInstance , AmethodParams);
+   Result:= FValue.AsType<T>;
+end;
+
+{$ENDREGION}
 function TControllerBase.Render(): TValue;
 begin
  Result := Self;
 end;
 
-function TControllerBase.ServicesContainner(AContainnerName: string): TValue;
+function TControllerBase.GetContainnersServices(AContainnerName: string): TValue;
 begin
  Result:= nil;
  if FContainnersServices.ContainsKey(AContainnerName) then

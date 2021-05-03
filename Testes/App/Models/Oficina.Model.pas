@@ -7,12 +7,15 @@ uses Model.IInterfaces, Model.ObjectConcrete,System.SysUtils,System.Generics.Def
 
   Type
      TOficinaModel = Class(TModelAbstract)
+  private
+    FAOWner:TObject;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+    constructor Create(AOwner: TObject; AObserverClass: TClass); override;
   published
-    function Get(AParams: System.TArray<TValue>): TValue; override;
-
+    function Get(AParams: System.TArray<TValue>): Variant; override;
+    function Getstr(AParams: String): TValue;
  End;
 
 implementation
@@ -39,9 +42,20 @@ begin
 
 end;
 
-function TOficinaModel.Get(AParams: System.TArray<TValue>): TValue;
+constructor TOficinaModel.Create(AOwner: TObject; AObserverClass: TClass);
 begin
- Result := Self;
+  inherited Create(AOwner,AObserverClass);
+  FAOWner := AOwner;
+end;
+
+function TOficinaModel.Getstr(AParams: String): TValue;
+begin
+ Result := '{"Data":"Teste"}';
+end;
+
+function TOficinaModel.Get(AParams: System.TArray<TValue>): Variant;
+begin
+ Result := '{"Data":"Teste"}';
 end;
 
  Initialization

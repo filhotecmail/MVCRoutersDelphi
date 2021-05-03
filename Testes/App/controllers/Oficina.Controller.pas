@@ -38,8 +38,9 @@ begin
  inherited;
   {registra na Lista os Models que o controller irá realizar uma conversa}
   Models(['Oficina']);
-  {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
-  ContainnersServices(['OficinaServicecontainner'],['Oficina']);
+  {Registra os containners services da aplicação da aplicação, caso o controller
+    não realize chamadas diretas ao modelo}
+  //ContainnersServices(['OficinaServicecontainner'],['Oficina']);
   {Recupera dentro de uma Lista de containners registrados}
   //FContainner:= GetContainnersServices('OficinaServicecontainner');
 end;
@@ -92,7 +93,10 @@ begin
 end;
 
 function TOficinaInformatica.ListaServicos: Tvalue;
+var Values: TArray<TValue>;
 begin
+ Values := ['Carlos'];
+ ShowMessage( GetValue<String>('Oficina','Get',[ TValue.From(Values) ]));
  Result := View('/Oficina.View',nil,'/Oficinadozezinho');
 end;
 
@@ -120,6 +124,7 @@ end;
 
 function TOficinaInformatica.Render: TValue;
 begin
+
  Result := View('/Oficina.View',nil,'/Oficinadozezinho');
 end;
 
