@@ -340,13 +340,7 @@ Um modelo (model) armazena dados e notifica suas visões e controladores associa
 
 # O Controller
 
-  Como mostra nosso Exemplo o Controller irá fazer o Recurso da herança, um controller Base do Core.
-  ![image](https://user-images.githubusercontent.com/18727307/116881835-22443080-abfa-11eb-9ff8-279f12b834fb.png)
-
-Podemos utilizar o Método AfterConstructor da Classe para dizer ao controller seus recursos.
-
-![image](https://user-images.githubusercontent.com/18727307/116881990-4dc71b00-abfa-11eb-90f9-de532765c251.png)
-
+ Como mostra nosso Exemplo o Controller irá fazer o Recurso da herança, um controller Base do Core.
 Perceba que a Base nos da um método para registrar Modelos a partir do nome do Modelo, isso faz com que o Controller não tenha uma injeção direta do Modelo, ou da clase real.
 O Mecanismo por RTTI irá instanciar o Modelo.
 
