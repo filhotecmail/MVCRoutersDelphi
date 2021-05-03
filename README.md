@@ -382,7 +382,7 @@ Recuperando um Containenr de serviços.
 
 ```Delphi
   {Recupera dentro de uma Lista de containners registrados}
-  FContainner:= GetContainnersServices('OficinaServicecontainner');
+  GetContainnersServices<String>('OficinaServicecontainner','Get',[  ])
 ```
 
     
