@@ -4,6 +4,7 @@ interface
  Uses System.SysUtils,System.Classes,System.Generics.Collections,Rtti;
 
   type TFieldsNames = Array of string;
+  type TFriendlyName = array of string;
 
   Type TProps = class
   private
@@ -11,16 +12,19 @@ interface
     FGenerator: String;
     FPrimaryKey: String;
     FFillable: TFieldsNames;
+    FfriendName: TFriendlyName;
     procedure SetFillable(const Value: TFieldsNames);
     procedure SetGenerator(const Value: String);
     procedure SetPrimaryKey(const Value: String);
     procedure SetTableName(const Value: string);
+    procedure SetfriendName(const Value: TFriendlyName);
 
   published
      property TableName: string read FTableName write SetTableName;
      property PrimaryKey: String read FPrimaryKey write SetPrimaryKey;
      property Generator: String read FGenerator write SetGenerator;
      property Fillable:TFieldsNames read FFillable write SetFillable;
+     property FriendName: TFriendlyName read FfriendName write SetfriendName;
   end;
 
  type TMessagesErrorType = class
@@ -54,6 +58,11 @@ implementation
 procedure TProps.SetFillable(const Value: TFieldsNames);
 begin
   FFillable := Value;
+end;
+
+procedure TProps.SetfriendName(const Value: TFriendlyName);
+begin
+  FfriendName := Value;
 end;
 
 procedure TProps.SetGenerator(const Value: String);

@@ -12,10 +12,12 @@ type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
     private
     FPropriedades: TProps;
     FListObserver: TList<IObservers>;
+    FSetConnection: String;
      function Props(const AProps: Tproc<TProps>):IModel; virtual;
      function Rules( const AFieldsNames: TArray<String>; const AfriendlyNames: Tarray<String>;
      AMessagesErrorForFields: TArray<TMessagesErrorType> ):IModel; Virtual;
     procedure SetPropriedades(const Value: TProps);
+    procedure SetSetConnection(const Value: String);
   public
     Constructor Create(AOwner: TObject; AObserverClass: TCLass); virtual;
     function AddObserver(AObservers: IObservers): ISubject; virtual;
@@ -39,10 +41,12 @@ type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
     procedure OnError(Obj: TValue);virtual;
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
-    function Get(AParams: TArray<TValue>):TValue; virtual; Abstract;
-    function Post(AParams: TArray<TValue> = nil):TValue; virtual; Abstract;
+    function Get(AParams: TArray<TValue>):variant; virtual; Abstract;
+    function Post(AParams: TArray<TValue> = nil):Variant; virtual; Abstract;
+    function GetAll:Variant; virtual; Abstract;
     published
     property Propriedades:TProps read FPropriedades write SetPropriedades;
+    property SetConnection: String read FSetConnection write SetSetConnection;
 
   end;
 
@@ -234,6 +238,12 @@ end;
 procedure TModelAbstract.SetPropriedades(const Value: TProps);
 begin
   FPropriedades := Value;
+end;
+
+procedure TModelAbstract.SetSetConnection(const Value: String);
+begin
+  FSetConnection := Value;
+
 end;
 
 end.

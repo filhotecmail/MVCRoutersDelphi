@@ -130,6 +130,8 @@
         <DCCReference Include="..\Lib\Services.Containner.IInterfaces.pas"/>
         <DCCReference Include="..\Lib\Services.Containner.ObjConcrete.pas"/>
         <DCCReference Include="..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas"/>
+        <DCCReference Include="..\Lib\DataBase.Config.pas"/>
+        <DCCReference Include="..\Lib\DataBase.Config.Types.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

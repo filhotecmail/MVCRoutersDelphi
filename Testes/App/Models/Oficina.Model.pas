@@ -13,6 +13,7 @@ uses Model.IInterfaces, Model.ObjectConcrete,System.SysUtils,System.Generics.Def
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
     constructor Create(AOwner: TObject; AObserverClass: TClass); override;
+    function GetAll: Variant; override;
   published
     function Get(AParams: System.TArray<TValue>): Variant; override;
     function Getstr(AParams: String): TValue;
@@ -28,11 +29,12 @@ begin
 
  with propriedades do
  begin
+  SetConnection:= 'Firebird';
   TableName := 'CADCLIENTES';
   PrimaryKey:= 'ID';
   Generator:= 'GEN_CADCLIENTES_ID';
   Fillable := ['ID','NOME'];
-  SetConnection:= 'Firebird';
+  FriendName:= [ 'Id','Nome ou razão social do cliente' ];
  end;
 
 end;
@@ -57,9 +59,16 @@ end;
 function TOficinaModel.Get(AParams: System.TArray<TValue>): Variant;
 begin
  Result := '{"Data":"Teste"}';
+ {Verificar na lista de Containners de serviços se existe algum containner registrado para esse model
+  se existir o sistema irá enviar o resultado para o Containner de serviços }
 end;
 
- Initialization
+ function TOficinaModel.GetAll: Variant;
+begin
+ Result := '{"Data":"Teste do getAll do Modelo"}';
+end;
+
+Initialization
   RegisterClassAlias(TOficinaModel,'Oficina');
  Finalization
   UnRegisterClass(TOficinaModel);

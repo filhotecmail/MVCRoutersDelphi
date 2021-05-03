@@ -12,9 +12,14 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
     FClass: TPersistentClass;
     FModels: TDictionary<String,TObject>;
     FObservers: TDictionary<String,TValue>;
-    FContainnersServices: TDictionary<String,TValue>;
+    FContainnersServices: TDictionary<String,TObject>;
+
+    // A Chave do Tipo string representa o Nome do containner Service
+    // O Valor é a Instância do Model
+    FContainnerServicesModel: TDictionary<String,TObject>;
     function ExcuteMethod<T>( AInstance: TObject; AMethodName: String; AmethodParams: Array of TValue ):T;
     function Model( Const AModelName: string ):TValue; overload;
+    function Containner(Const AContainnerName: String): TValue;
   private
     FModelName: string;
   public
@@ -42,8 +47,10 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
      ///   possamos recuperar provedores de serviços registrados para o Modelo.
      ///
      /// </summary>
-    function ContainnersServices(AProviderServiceName: TArray<String>; AModels: TArray<String>):TValue;
-    function GetContainnersServices(AContainnerName: string):TValue;
+    function ContainnersServices(AContainnerServiceName,
+  AModels: TArray<String>; AConstructornames: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>):TValue;
+
+    function GetContainnersServices<T>(AContainnerName: string; const AMethodName: String; AMethodparams: TArrayOfParams):T;
     function OBServers( Const AObserverNames: TArray<String> ):TControllerBase; virtual;
 End;
 
@@ -72,7 +79,8 @@ begin
   inherited;
    FModels:= TDictionary<String, TObject>.create;
    FObservers:= TDictionary<String,TValue>.create;
-   FContainnersServices:= TDictionary<String,TValue>.create;
+   FContainnersServices:= TDictionary<String,TObject>.create;
+   FContainnerServicesModel:= TDictionary<String,TObject>.create;
 end;
 
 
@@ -82,6 +90,7 @@ begin
   FreeAndNil( FModels );
   FreeAndNil( FObservers );
   FreeAndNil( FContainnersServices );
+  FreeAndNil( FContainnerServicesModel );
 end;
 
 function TControllerBase.Get(const AValues: Tarray<TValue>): TValue;
@@ -137,17 +146,60 @@ begin
 
 end;
  {$REGION 'Area do Provedor de serviços'}
-function TControllerBase.ContainnersServices(AProviderServiceName,
-  AModels: TArray<String>): TValue;
-   var FClass: TPersistentClass;
-      FObject: TObject;
-      RttiContext: TRttiContext;
-      RttiInstanceType: TRttiInstanceType;
-      RttiMethod: TRttiMethod;
-      Instance: TValue;
-      I,X: Integer;
+function TControllerBase.Containner(const AContainnerName: String): TValue;
 begin
- Result:= FContainnersServices;
+ Result:= nil;
+ if FContainnersServices.ContainsKey(AContainnerName) then
+    Result := FContainnersServices.Items[AContainnerName]
+    else raise Exception.Create('Não existe um Containner Service registrado na lista com esse nome '+AContainnerName);
+end;
+
+function TControllerBase.ContainnersServices(AContainnerServiceName,
+  AModels: TArray<String>; AConstructornames: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>): TValue;
+var FClass: TPersistentClass;
+    FObject: TObject;
+    RttiContext: TRttiContext;
+    RttiInstanceType: TRttiInstanceType;
+    RttiMethod: TRttiMethod;
+    Instance: TValue;
+    I,X: Integer;
+  FObserversClass: TPersistentClass;
+  RttiContextObserver: TRttiContext;
+  FClassObserver: TPersistentClass;
+  RttiInstanceTypeObserver: TRttiInstanceType;
+  RttiField: TRttiField;
+begin
+ Result := Self;
+ {Verificar na Lista de Models se existe um Modelo registrado com os nomes passados no Array
+  Verificar Se existem ContainnersServices registrados informados no Array de ContainnersService
+  Se existir ..
+  criar as Instâncias dos ContainnersServices registrando em uma Lista o nome do ContainnerService e o
+  Objeto da instância.
+  Armazenar em um Dicionario de dados o Pair entre o Modelo e o ServiceContainner do Modelo.
+   por exemplo.: Para 1 Modelo podem existir varios ContainnerServices.
+   Em algum momento eu preciso recuperar para qual Modelo o Containner Service está registrado e atuando
+   Servicos.
+  }
+  for I := Low(AContainnerServiceName) to High(AContainnerServiceName) do
+  begin
+   Assert(FModels.ContainsKey(AModels[i]),'Não existe um Model de nome .: '+AModels[i]+' para Containner registrado');
+   Assert( GetClass(AContainnerServiceName[i]) <> nil,'Não existe um Containner registrado com o Alias '+AContainnerServiceName[i]  );
+
+   if not FContainnersServices.ContainsKey(AContainnerServiceName[i]) then
+   begin
+    FClass:= FindClass(AContainnerServiceName[I]);
+    RttiContext := TRttiContext.Create;
+    RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
+    Instance := RttiInstanceType;
+    RttiMethod := RttiInstanceType.GetMethod(AConstructornames[I]);
+    FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructorContainner[I]).AsObject;
+    // Vai injetar no Field da Classe base Chamado Model a instância Criada;
+    RttiField:= RttiInstanceType.GetField('FModel');
+    RttiField.SetValue(FObject,FModels.Items[AModels[i]]);
+    FContainnersServices.Add(AContainnerServiceName[I],FObject);
+    FContainnerServicesModel.AddOrSetValue(AContainnerServiceName[i], FModels.Items[AModels[i]]);
+   end;
+  end;
 end;
  function TControllerBase.ExcuteMethod<T>(AInstance: TObject; AMethodName: String;
   AmethodParams: array of TValue): T;
@@ -172,13 +224,12 @@ begin
  Result := Self;
 end;
 
-function TControllerBase.GetContainnersServices(AContainnerName: string): TValue;
+function TControllerBase.GetContainnersServices<T>(AContainnerName: string; const AMethodName: String; AMethodparams: TArrayOfParams): T;
 begin
- Result:= nil;
-// if FContainnersServices.ContainsKey(AContainnerName) then
-//    Result := FContainnersServices.Items[AContainnerName]
-//    else
-//    raise Exception.Create('Não existe um ServicesContainner registrado na lista com o nome de '+AContainnerName);
+ if FContainnersServices.ContainsKey(AContainnerName) then
+   Result:= ExcuteMethod<T>( Containner(AContainnerName).AsObject ,AMethodName,AMethodParams )
+    else
+    raise Exception.Create('Não existe um ServicesContainner registrado na lista com o nome de '+AContainnerName);
 end;
 
 end.

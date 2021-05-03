@@ -23,7 +23,9 @@ uses
   View.Abstract in '..\Lib\View.Abstract.pas',
   Services.Containner.IInterfaces in '..\Lib\Services.Containner.IInterfaces.pas',
   Services.Containner.ObjConcrete in '..\Lib\Services.Containner.ObjConcrete.pas',
-  Oficina.Services.Containner in '..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas';
+  Oficina.Services.Containner in '..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas',
+  DataBase.Config in '..\Lib\DataBase.Config.pas',
+  DataBase.Config.Types in '..\Lib\DataBase.Config.Types.pas';
 
 {$R *.res}
 begin

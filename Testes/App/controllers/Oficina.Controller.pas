@@ -37,12 +37,10 @@ procedure TOficinaInformatica.AfterConstruction;
 begin
  inherited;
   {registra na Lista os Models que o controller irá realizar uma conversa}
-  Models(['Oficina']);
+  Models(['Oficina'],[ [Self,nil] ]);
   {Registra os containners services da aplicação da aplicação, caso o controller
     não realize chamadas diretas ao modelo}
-  //ContainnersServices(['OficinaServicecontainner'],['Oficina']);
-  {Recupera dentro de uma Lista de containners registrados}
-  //FContainner:= GetContainnersServices('OficinaServicecontainner');
+  ContainnersServices(['OficinaServicecontainner'],['Oficina'],['New'],[ [] ]);
 end;
 
 function TOficinaInformatica.AssistenciaComputadores: TValue;
@@ -96,7 +94,9 @@ function TOficinaInformatica.ListaServicos: Tvalue;
 var Values: TArray<TValue>;
 begin
  Values := ['Carlos'];
- ShowMessage( GetValue<String>('Oficina','Get',[ TValue.From(Values) ]));
+// ShowMessage( GetValue<String>('Oficina','Get',[ TValue.From(Values) ]));
+ {Recupera dentro de uma Lista de containners registrados}
+ ShowMessage(GetContainnersServices<String>('OficinaServicecontainner','Get',[ TValue.From(Values) ]));
  Result := View('/Oficina.View',nil,'/Oficinadozezinho');
 end;
 
