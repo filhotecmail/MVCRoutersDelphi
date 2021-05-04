@@ -4,7 +4,7 @@ interface
   uses System.Classes,System.SysUtils,System.Generics.Collections,
   Services.Containner.IInterfaces,Data.DB,System.Rtti;
   Type TArrayofParams = Array of TValue;
-  type TContainnerServices = class(TInterfacedPersistent,IServiceProvider)
+  type TContainnerServices = class(TDataset,IServiceProvider)
   private
     FDataSources: TDictionary<String,TDatasource>;
     FModel: TObject;
@@ -62,4 +62,7 @@ begin
 
 end;
 
+ Initialization
+
+ finalization
 end.

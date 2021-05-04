@@ -3,7 +3,7 @@ unit Oficina.Model;
 interface
 
 uses Model.IInterfaces, Model.ObjectConcrete,System.SysUtils,System.Generics.Defaults,Rtti,
-     System.Classes,vcl.Dialogs;
+     System.Classes,Vcl.Dialogs,Data.DB;
 
   Type
      TOficinaModel = Class(TModelAbstract)
@@ -26,16 +26,18 @@ implementation
 procedure TOficinaModel.AfterConstruction;
 begin
   inherited AfterConstruction;
-
- with propriedades do
+ with Properties do
  begin
-  SetConnection:= 'Firebird';
   TableName := 'CADCLIENTES';
   PrimaryKey:= 'ID';
-  Generator:= 'GEN_CADCLIENTES_ID';
-  Fillable := ['ID','NOME'];
+  Generator := 'GEN_CADCLIENTES_ID';
+  Fillable  := ['ID','NOME'];
   FriendName:= [ 'Id','Nome ou razão social do cliente' ];
  end;
+
+ RegisterDAO:= [  'DaoOficinAmazonWs: OficinaDAOSrvHttp',
+                  'DAOOficinaDataset: OficinaDAODataset' ];
+ RegisterContainnerServices:= [ 'ContainnerServicosDataset:OficinaServicecontainner' ];
 
 end;
 
@@ -63,13 +65,20 @@ begin
   se existir o sistema irá enviar o resultado para o Containner de serviços }
 end;
 
- function TOficinaModel.GetAll: Variant;
+function TOficinaModel.GetAll: Variant;
 begin
- Result := '{"Data":"Teste do getAll do Modelo"}';
+ // Vai entrar o Business Core Baseado em TDataset
+ {
+   O Model Delega aum Serviço a sua responsabilidade de manipular os Objetos
+   que serão alimentados pelo DAO.
+   O Dao recebeu uma especialização do Tipo IDaoDataset
+ }
+ Result := Execute<Variant>('OficinaDAODataset','GetCars',[ ContainnerServices<TDataset>('OficinaServicecontainner') ]);
+ ShowMessage( Result );
 end;
 
-Initialization
-  RegisterClassAlias(TOficinaModel,'Oficina');
+ Initialization
+ RegisterClassAlias(TOficinaModel,'Oficina');
  Finalization
-  UnRegisterClass(TOficinaModel);
+ UnRegisterClass(TOficinaModel);
 end.

@@ -129,9 +129,21 @@
         <DCCReference Include="..\Lib\View.Abstract.pas"/>
         <DCCReference Include="..\Lib\Services.Containner.IInterfaces.pas"/>
         <DCCReference Include="..\Lib\Services.Containner.ObjConcrete.pas"/>
-        <DCCReference Include="..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas"/>
+        <DCCReference Include="..\Testes\App\ServicesContainners\Oficina.Services.Dataset.Containner.pas"/>
         <DCCReference Include="..\Lib\DataBase.Config.pas"/>
         <DCCReference Include="..\Lib\DataBase.Config.Types.pas"/>
+        <DCCReference Include="..\Lib\Dao.Base.pas"/>
+        <DCCReference Include="..\Lib\Dao.IInterfaces.pas"/>
+        <DCCReference Include="..\Lib\Dao.Provider.pas"/>
+        <DCCReference Include="..\Lib\Dao.Provider.IInterfaces.pas"/>
+        <DCCReference Include="..\Lib\Dao.Provider.PostGres.pas"/>
+        <DCCReference Include="..\Lib\Dao.Provider.Firebird.pas"/>
+        <DCCReference Include="..\Lib\Dao.Provider.RestClientLIB.pas"/>
+        <DCCReference Include="..\Lib\Dao.Conectors\Dao.RestClient.pas"/>
+        <DCCReference Include="..\Lib\Commom.Utils.pas"/>
+        <DCCReference Include="..\Testes\App\Dao\Oficina.DAO.Dataset.pas"/>
+        <DCCReference Include="..\Testes\App\Dao\Oficina.DAO.IInterfaces.pas"/>
+        <DCCReference Include="..\Testes\App\Dao\Oficina.DAO.RestClientHttp.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

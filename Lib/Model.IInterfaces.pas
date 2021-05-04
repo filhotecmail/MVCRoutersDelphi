@@ -18,7 +18,6 @@ interface
     procedure SetPrimaryKey(const Value: String);
     procedure SetTableName(const Value: string);
     procedure SetfriendName(const Value: TFriendlyName);
-
   published
      property TableName: string read FTableName write SetTableName;
      property PrimaryKey: String read FPrimaryKey write SetPrimaryKey;

@@ -23,9 +23,21 @@ uses
   View.Abstract in '..\Lib\View.Abstract.pas',
   Services.Containner.IInterfaces in '..\Lib\Services.Containner.IInterfaces.pas',
   Services.Containner.ObjConcrete in '..\Lib\Services.Containner.ObjConcrete.pas',
-  Oficina.Services.Containner in '..\Testes\App\ServicesContainners\Oficina.Services.Containner.pas',
+  Oficina.Services.Dataset.Containner in '..\Testes\App\ServicesContainners\Oficina.Services.Dataset.Containner.pas',
   DataBase.Config in '..\Lib\DataBase.Config.pas',
-  DataBase.Config.Types in '..\Lib\DataBase.Config.Types.pas';
+  DataBase.Config.Types in '..\Lib\DataBase.Config.Types.pas',
+  Dao.Base in '..\Lib\Dao.Base.pas',
+  Dao.IInterfaces in '..\Lib\Dao.IInterfaces.pas',
+  Dao.Provider in '..\Lib\Dao.Provider.pas',
+  Dao.Provider.IInterfaces in '..\Lib\Dao.Provider.IInterfaces.pas',
+  Dao.Provider.PostGres in '..\Lib\Dao.Provider.PostGres.pas',
+  Dao.Provider.Firebird in '..\Lib\Dao.Provider.Firebird.pas',
+  Dao.Provider.RestClientLIB in '..\Lib\Dao.Provider.RestClientLIB.pas',
+  Dao.RestClient in '..\Lib\Dao.Conectors\Dao.RestClient.pas',
+  Commom.Utils in '..\Lib\Commom.Utils.pas',
+  Oficina.DAO.Dataset in '..\Testes\App\Dao\Oficina.DAO.Dataset.pas',
+  Oficina.DAO.IInterfaces in '..\Testes\App\Dao\Oficina.DAO.IInterfaces.pas',
+  Oficina.DAO.RestClientHttp in '..\Testes\App\Dao\Oficina.DAO.RestClientHttp.pas';
 
 {$R *.res}
 begin

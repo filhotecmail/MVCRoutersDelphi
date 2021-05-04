@@ -1,15 +1,14 @@
-unit Oficina.Services.Containner;
+unit Oficina.Services.Dataset.Containner;
 
 interface
   uses System.Classes,System.SysUtils,System.Generics.Collections,
-  Services.Containner.ObjConcrete, System.RTTI,Vcl.Dialogs;
+  Services.Containner.ObjConcrete, System.RTTI;
 
   type TOficinaServicesContainner = class(TContainnerServices)
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
     function Get(Arg: TArray<TValue>): Variant;
-    class function New:TOficinaServicesContainner;
   end;
 
 implementation
@@ -29,12 +28,7 @@ end;
 
 function TOficinaServicesContainner.Get(Arg: TArray<TValue>): Variant;
 begin
- Result :=  Executemethod<String>('GetAll',[]);
-end;
-
-class function TOficinaServicesContainner.New: TOficinaServicesContainner;
-begin
- Result:= TOficinaServicesContainner.Create;
+ //Result :=  Executemethod<String>('GetAll',[]);
 end;
 
 initialization

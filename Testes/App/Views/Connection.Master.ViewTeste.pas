@@ -4,15 +4,24 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,JSon, Routers.Methods;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,JSon, Routers.Methods,
+  REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
+  REST.Authenticator.OAuth, Dao.RestClient, DataBase.Config.Types;
 
 type
   TForm24 = class(TForm)
     mmo1: TMemo;
     btn4: TButton;
     btn5: TButton;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    OAuth2Authenticator1: TOAuth2Authenticator;
+    OAuth1Authenticator1: TOAuth1Authenticator;
+    Button1: TButton;
     procedure btn4Click(Sender: TObject);
     procedure btn5Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -42,6 +51,13 @@ end;
 procedure TForm24.btn5Click(Sender: TObject);
 begin
 // RoutersController.FreeRoute('/Clientes');
+end;
+
+procedure TForm24.Button1Click(Sender: TObject);
+begin
+// TDaoRestClient
+//  .Create
+//  .ClientConfig( GetConfig('WebServiceTeste') );
 end;
 
 procedure TForm24.OnFoundDataBase(Obj: TJSONObject);

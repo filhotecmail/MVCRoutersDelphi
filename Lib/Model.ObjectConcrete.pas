@@ -3,23 +3,30 @@ unit Model.ObjectConcrete;
 interface
 
 uses Model.IInterfaces,system.classes,system.SysUtils,Rtti, Observers.IInterfaces,
-     System.Generics.Collections;
+     System.Generics.Collections, DataBase.Config.Types, Commom.Utils;
 
-type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
+ type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
   strict private
     FAOwner: TObject;
     FObserver: IObservers;
     private
     FPropriedades: TProps;
+    FListDao: TDictionary<String,TObject>;
     FListObserver: TList<IObservers>;
     FSetConnection: String;
+    FContainnerServices: TDictionary<String,TObject>;
+    FDao: TArray<String>;
+    FRegisterContainnerServices: TArray<String>;
      function Props(const AProps: Tproc<TProps>):IModel; virtual;
      function Rules( const AFieldsNames: TArray<String>; const AfriendlyNames: Tarray<String>;
      AMessagesErrorForFields: TArray<TMessagesErrorType> ):IModel; Virtual;
     procedure SetPropriedades(const Value: TProps);
     procedure SetSetConnection(const Value: String);
+    procedure SetDao(const Value: TArray<String>);
+    procedure SetRegisterContainnerServices(const Value: TArray<String>);
   public
     Constructor Create(AOwner: TObject; AObserverClass: TCLass); virtual;
+
     function AddObserver(AObservers: IObservers): ISubject; virtual;
     function RemoveObserver(AObservers: IObservers): ISubject; virtual;
     function NotifyObservers: ISubject; virtual;
@@ -44,10 +51,16 @@ type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
     function Get(AParams: TArray<TValue>):variant; virtual; Abstract;
     function Post(AParams: TArray<TValue> = nil):Variant; virtual; Abstract;
     function GetAll:Variant; virtual; Abstract;
-    published
-    property Propriedades:TProps read FPropriedades write SetPropriedades;
+    procedure RegisterDaos;
+   published
+    property Properties:TProps read FPropriedades write SetPropriedades;
     property SetConnection: String read FSetConnection write SetSetConnection;
-
+    property RegisterDAO: TArray<String> read FDao write SetDao;
+    property RegisterContainnerServices: TArray<String> read FRegisterContainnerServices write SetRegisterContainnerServices;
+    function ContainnerServices<T>(Const AContainnerName: String):T;
+    function Execute<T>(Const AClassName: String; Const AMethodName: String; APArams: Array of TValue ):T;
+    procedure InternalregisterContainnerServices;
+    procedure FreeListObjects;
   end;
 
   implementation
@@ -78,8 +91,7 @@ end;
 procedure TModelAbstract.AfterConstruction;
 begin
   inherited;
- FListObserver := TList<IObservers>.create;
- FPropriedades:= TProps.Create;
+
 end;
 
 procedure TModelAbstract.AfterDelete(Obj: TValue);
@@ -151,6 +163,8 @@ begin
   inherited;
  FreeAndNil(FListObserver);
  FreeAndNil(FPropriedades);
+ FreeAndNil( FListDao );
+ FreeAndNil( FContainnerServices );
 end;
 
 procedure TModelAbstract.BeforeEdit(Obj: TValue);
@@ -185,11 +199,79 @@ begin
    FListObserver.Items[I].BeforePost(Obj);
 end;
 
+function TModelAbstract.ContainnerServices<T>(const AContainnerName: String): T;
+begin
+ if  FContainnerServices.ContainsKey(AContainnerName) then
+     Result := TValue.From(FContainnerServices.Items[AContainnerName]).AsType<T>;
+end;
+
 constructor TModelAbstract.Create(AOwner: TObject; AObserverClass: TCLass);
 begin
  inherited Create;
  FAOwner:= AOwner;
+ FListObserver := TList<IObservers>.create;
+ FPropriedades:= TProps.Create;
+ FListDao:= TDictionary<String,TObject>.create;
+ FContainnerServices:= TDictionary<String,TObject>.create;
  //FObserver:= AObserverClass;
+end;
+
+function TModelAbstract.Execute<T>(const AClassName, AMethodName: String;
+  APArams: array of TValue):T;
+begin
+ Result:=  TInvoke.Create._InvokeRttiMethod<T>( FListDao.Items[AClassName],AMethodName,APArams );
+end;
+
+procedure TModelAbstract.FreeListObjects;
+begin
+
+end;
+
+procedure TModelAbstract.InternalregisterContainnerServices;
+var FClass: TPersistentClass;
+    FObject: TObject;
+    RttiContext: TRttiContext;
+    RttiInstanceType: TRttiInstanceType;
+    RttiMethod: TRttiMethod;
+    Instance: TValue;
+    I: Integer;
+    FObserversClass: TPersistentClass;
+    RttiContextObserver: TRttiContext;
+    FClassObserver: TPersistentClass;
+    RttiInstanceTypeObserver: TRttiInstanceType;
+    RttiField: TRttiField;
+begin
+  for I := Low(FRegisterContainnerServices) to High(FRegisterContainnerServices) do
+  begin
+    _ReadArrayStringSeparadorAPatch( FRegisterContainnerServices,':',
+     procedure
+     ( Arg: TDictionary<String,String> )
+     var I: Integer;
+         Item: String;
+         Key: String;
+     begin
+      { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
+        acionando o método construtor.}
+       for Item in Arg.Keys do
+       begin
+        Key := Trim(Arg.Items[Item]);
+        Assert( GetClass(Key) <> nil,'Não existe um ContainnerServices registrado com o Alias '+Key  );
+
+        if not FContainnerServices.ContainsKey(Key) then
+        begin
+          FClass:= FindClass(Key);
+          RttiContext := TRttiContext.Create;
+          RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
+          Instance := RttiInstanceType;
+          RttiMethod := RttiInstanceType.GetMethod('Create');
+          FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[nil]).AsObject;
+          // Vai injetar no Field da Classe base Chamado Model a instância Criada;
+          FContainnerServices.Add(Key,FObject);
+        end;
+       end;
+     end);
+  end;
+
 end;
 
 function TModelAbstract.NotifyObservers: ISubject;
@@ -222,6 +304,52 @@ begin
   Result := self;
 end;
 
+procedure TModelAbstract.RegisterDaos;
+var FClass: TPersistentClass;
+    FObject: TObject;
+    RttiContext: TRttiContext;
+    RttiInstanceType: TRttiInstanceType;
+    RttiMethod: TRttiMethod;
+    Instance: TValue;
+    I: Integer;
+    FObserversClass: TPersistentClass;
+    RttiContextObserver: TRttiContext;
+    FClassObserver: TPersistentClass;
+    RttiInstanceTypeObserver: TRttiInstanceType;
+    RttiField: TRttiField;
+begin
+  for I := Low(FDao) to High(FDao) do
+  begin
+    _ReadArrayStringSeparadorAPatch( FDao,':',
+     procedure
+     ( Arg: TDictionary<String,String> )
+     var I: Integer;
+         Item: String;
+         Key: String;
+     begin
+      { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
+        acionando o método construtor.}
+       for Item in Arg.Keys do
+       begin
+        Key := Trim(Arg.Items[Item]);
+        Assert( GetClass(Key) <> nil,'Não existe um DAO registrado com o Alias '+Key  );
+
+        if not FListDao.ContainsKey(Key) then
+        begin
+          FClass:= FindClass(Key);
+          RttiContext := TRttiContext.Create;
+          RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
+          Instance := RttiInstanceType;
+          RttiMethod := RttiInstanceType.GetMethod('Create');
+          FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]).AsObject;
+          // Vai injetar no Field da Classe base Chamado Model a instância Criada;
+          FListDao.Add(Key,FObject);
+        end;
+       end;
+     end);
+  end;
+end;
+
 function TModelAbstract.RemoveObserver(AObservers: IObservers): ISubject;
 begin
  Result := self;
@@ -235,9 +363,23 @@ begin
 
 end;
 
+procedure TModelAbstract.SetDao(const Value: TArray<String>);
+begin
+  FDao := Value;
+  RegisterDaos;
+end;
+
 procedure TModelAbstract.SetPropriedades(const Value: TProps);
 begin
   FPropriedades := Value;
+end;
+
+procedure TModelAbstract.SetRegisterContainnerServices(
+  const Value: TArray<String>);
+begin
+  FRegisterContainnerServices := Value;
+  // Registra Containers de Serviços para o Modelo
+  InternalregisterContainnerServices;
 end;
 
 procedure TModelAbstract.SetSetConnection(const Value: String);

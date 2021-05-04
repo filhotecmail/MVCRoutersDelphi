@@ -48,9 +48,9 @@ type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
      ///
      /// </summary>
     function ContainnersServices(AContainnerServiceName,
-  AModels: TArray<String>; AConstructornames: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>):TValue;
+  AModels: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>):TValue;
 
-    function GetContainnersServices<T>(AContainnerName: string; const AMethodName: String; AMethodparams: TArrayOfParams):T;
+    function ExcuteContainnerMethod<T>(AContainnerName: string; const AMethodName: String; AMethodparams: TArrayOfParams):T;
     function OBServers( Const AObserverNames: TArray<String> ):TControllerBase; virtual;
 End;
 
@@ -155,7 +155,7 @@ begin
 end;
 
 function TControllerBase.ContainnersServices(AContainnerServiceName,
-  AModels: TArray<String>; AConstructornames: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>): TValue;
+  AModels: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>): TValue;
 var FClass: TPersistentClass;
     FObject: TObject;
     RttiContext: TRttiContext;
@@ -191,7 +191,7 @@ begin
     RttiContext := TRttiContext.Create;
     RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
     Instance := RttiInstanceType;
-    RttiMethod := RttiInstanceType.GetMethod(AConstructornames[I]);
+    RttiMethod := RttiInstanceType.GetMethod('Create');
     FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructorContainner[I]).AsObject;
     // Vai injetar no Field da Classe base Chamado Model a instância Criada;
     RttiField:= RttiInstanceType.GetField('FModel');
@@ -224,7 +224,7 @@ begin
  Result := Self;
 end;
 
-function TControllerBase.GetContainnersServices<T>(AContainnerName: string; const AMethodName: String; AMethodparams: TArrayOfParams): T;
+function TControllerBase.ExcuteContainnerMethod<T>(AContainnerName: string; const AMethodName: String; AMethodparams: TArrayOfParams): T;
 begin
  if FContainnersServices.ContainsKey(AContainnerName) then
    Result:= ExcuteMethod<T>( Containner(AContainnerName).AsObject ,AMethodName,AMethodParams )
