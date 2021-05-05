@@ -359,25 +359,69 @@ Mais sobre os services Containners.
 https://laravel.com/docs/8.x/container
 
 ```Delphi
-implementation
-{ TOficinaInformatica }
-procedure TOficinaInformatica.AfterConstruction;
+procedure TOficinaModel.AfterConstruction;
 begin
- inherited;
-  {registra na Lista os Models que o controller irá realizar uma conversa}
-  Models(['Oficina'],[ [Self,nil] ]);
- {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
-  ContainnersServices(['OficinaServicecontainner'],['Oficina'],['New'],[ [] ]);
+ RegisterContainnerServices:= [ 'OficinaServicecontainner' ];
 end;
 
 ```
 
-Recuperando um Containenr de serviços.
+Recuperando um Containenr de serviços atraves do model, utilizando a Chamada do Méthodo Execute<T>.
 
 ```Delphi
-  {Recupera dentro de uma Lista de containners registrados}
-  GetContainnersServices<String>('OficinaServicecontainner','Get',[  ])
+   Execute<Variant>('OficinaDAODataset','GetAll', [ ContainnerServices<TDataset>('OficinaServicecontainner') ])
 ```
+O Método ContainnerServices<T>, recupera um Containner de serviços registrados pelo Model , o containner de serviços pode herdar e ter especializações e regras de negócios proprias, removendo do Model toda a regra de negócio. Podemos ter varios containners services para cada Situação que assim exigir.
+
+```Delphi
+ContainnerServices<TDataset>('OficinaServicecontainner')
+```
+
+
+# Drivermanager
+ Seguindo o modelo ja conhecido do Java e outras tecnologias , assim como Laravel, o framework irá te entregar uma unidade chamada [  DataBase.Config  ]
+ crie uma Variável que representará o tipo da tecnologia e dentro do Array, com uma simples anotação separada por ' : ' especifique as propriedades necessárias para configurar os drivers de conexão.
+
+Abaixo de implementation , crie as variáveis que representam os tipos da tecnologia.
+```Delphi
+implementation
+   var LocalDatabase   : FirebirdDriverConfig;
+      WebServiceTeste : RestClientAPIConfig;
+```
+Utilize a sessão Initialize para montar as strings e adicionar a lista de configurações.
+
+```Delphi
+Initialization
+   LocalDatabase:= [
+      'DatabaseName: BancoTeste',
+      'Host: 127.0.0.1',
+      'Port:3050',
+      'CharSet:win1252'
+      ];
+
+  WebServiceTeste:= [
+      'Host: 1270.0.0.1',
+      'BaseURL:www.google.com.br',
+      'TokenAPI:AFSDFADFADFBBgngn5n46gn4d65b41d65b1zd6n5d6n546',
+      'Port:8089',
+      'ContentType:application/json',
+      'Accept-Charset: utf-8, iso-8859-1;q=0.5',
+      'Accept-Encoding: gzip, compress, br'
+    ];
+  AddConnections('LocalDatabase',LocalDatabase);
+  AddConnections('WebServiceTeste',WebServiceTeste);
+```
+Utilize a unidade [ DataBase.Config.Types ], a função  " function DriverManager(Key: String):TStringArrayConfigs; " para recuperar uma configurações e o tipo dela.
+```Delphi
+ function DriverManager(Key: String):TStringArrayConfigs;
+begin
+ Assert(Connections.ContainsKey(Key),format('Não existe uma configuração na lista de nome %s',[Key]));
+ result:= Connections.Items[Key];
+ end;
+
+```
+
+
 
     
 
