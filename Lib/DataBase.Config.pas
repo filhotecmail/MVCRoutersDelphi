@@ -37,13 +37,12 @@ unit DataBase.Config;
 interface
  uses System.classes,System.SysUtils, DataBase.Config.Types;
 
-  var LocalDatabase   : FirebirdDriverConfig;
+implementation
+   var LocalDatabase   : FirebirdDriverConfig;
       WebServiceTeste : RestClientAPIConfig;
 
-implementation
-
  Initialization
- LocalDatabase:= [
+   LocalDatabase:= [
       'DatabaseName: BancoTeste',
       'Host: 127.0.0.1',
       'Port:3050',

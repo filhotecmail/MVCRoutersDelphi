@@ -16,22 +16,22 @@ interface
   type RedisDriverConfig= TStringArrayConfigs;
 
   procedure AddConnections(Key: String; Value: TStringArrayConfigs);
-  function DriverManager(Key: String):TStringArrayConfigs;
   function PatchConfig(APatch: TStringArrayConfigs; Value: String):Variant; overload;
+  function DriverManager(Key: String):TStringArrayConfigs;
 
 implementation
-  var Connections: TDictionary<String,TStringArrayConfigs>;
+ var Connections: TDictionary<String,TStringArrayConfigs>;
 
-  function PatchConfig(APatch: TStringArrayConfigs; Value: String):Variant;
-  begin
-   Result:= _ReadArrayStringSeparadorValue(APatch,Value,':');
-  end;
+function PatchConfig(APatch: TStringArrayConfigs; Value: String):Variant;
+begin
+ Result:= _ReadArrayStringSeparadorValue(APatch,Value,':');
+end;
 
-  function DriverManager(Key: String):TStringArrayConfigs;
-  begin
-   Assert(Connections.ContainsKey(Key),'Não existe uma configuração na lista com esse nome');
-   result:= Connections.Items[Key];
-  end;
+function DriverManager(Key: String):TStringArrayConfigs;
+begin
+ Assert(Connections.ContainsKey(Key),format('Não existe uma configuração na lista de nome %s',[Key]));
+ result:= Connections.Items[Key];
+ end;
 
   procedure AddConnections(Key: String; Value: TStringArrayConfigs);
   begin
