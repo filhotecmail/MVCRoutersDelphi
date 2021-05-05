@@ -44,8 +44,10 @@ implementation
 
  Initialization
  LocalDatabase:= [
-      '{"DatabaseName": ',
-      '"Host": "127.0.0.1"}'
+      'DatabaseName: BancoTeste',
+      'Host: 127.0.0.1',
+      'Port:3050',
+      'CharSet:win1252'
       ];
 
   WebServiceTeste:= [

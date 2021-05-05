@@ -21,7 +21,7 @@ implementation
 procedure TOficinaDAODataset.AfterConstruction;
 begin
   inherited;
- ResourceName:= GetConfig('LocalDatabase');
+ ResourceName:= DriverManager('LocalDatabase');
 end;
 
 function TOficinaDAODataset.GetAll(AObject: TObject): OleVariant;

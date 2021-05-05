@@ -12,6 +12,8 @@ interface
   type MongoDBDriverConfig= TStringArrayConfigs;
   type GraphQlDriverConfig= TStringArrayConfigs;
   type RestClientAPIConfig = TStringArrayConfigs;
+  type Neo4JDriverConfig = TStringArrayConfigs;
+  type RedisDriverConfig= TStringArrayConfigs;
 
   procedure AddConnections(Key: String; Value: TStringArrayConfigs);
   function DriverManager(Key: String):TStringArrayConfigs;
