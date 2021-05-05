@@ -37,7 +37,8 @@ uses
   Commom.Utils in '..\Lib\Commom.Utils.pas',
   Oficina.DAO.Dataset in '..\Testes\App\Dao\Oficina.DAO.Dataset.pas',
   Oficina.DAO.IInterfaces in '..\Testes\App\Dao\Oficina.DAO.IInterfaces.pas',
-  Oficina.DAO.RestClientHttp in '..\Testes\App\Dao\Oficina.DAO.RestClientHttp.pas';
+  Oficina.DAO.RestClientHttp in '..\Testes\App\Dao\Oficina.DAO.RestClientHttp.pas',
+  Commom.RTTI.Utils in '..\Lib\Commom.RTTI.Utils.pas';
 
 {$R *.res}
 begin

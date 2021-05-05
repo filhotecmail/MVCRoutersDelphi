@@ -144,6 +144,7 @@
         <DCCReference Include="..\Testes\App\Dao\Oficina.DAO.Dataset.pas"/>
         <DCCReference Include="..\Testes\App\Dao\Oficina.DAO.IInterfaces.pas"/>
         <DCCReference Include="..\Testes\App\Dao\Oficina.DAO.RestClientHttp.pas"/>
+        <DCCReference Include="..\Lib\Commom.RTTI.Utils.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

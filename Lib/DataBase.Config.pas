@@ -60,6 +60,5 @@ implementation
     ];
   AddConnections('LocalDatabase',LocalDatabase);
   AddConnections('WebServiceTeste',WebServiceTeste);
- finalization
 
 end.
