@@ -412,6 +412,15 @@ Initialization
   AddConnections('LocalDatabase',LocalDatabase);
   AddConnections('WebServiceTeste',WebServiceTeste);
 ```
+Utilize a unidade [ DataBase.Config.Types ], a função  " function DriverManager(Key: String):TStringArrayConfigs; " para recuperar uma configurações e o tipo dela.
+```Delphi
+ function DriverManager(Key: String):TStringArrayConfigs;
+begin
+ Assert(Connections.ContainsKey(Key),format('Não existe uma configuração na lista de nome %s',[Key]));
+ result:= Connections.Items[Key];
+ end;
+
+```
 
 
 
