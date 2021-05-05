@@ -32,13 +32,14 @@ begin
   PrimaryKey:= 'ID';
   Generator := 'GEN_CADCLIENTES_ID';
   Fillable  := ['ID','NOME'];
+  RequiredFields:= ['ID'];
+  SizeFields:= [0,60];
   FriendName:= [ 'Id','Nome ou razão social do cliente' ];
+  FieldTypes:= [ ftInteger,ftString ];
  end;
-
- RegisterDAO:= [  'DaoOficinAmazonWs: OficinaDAOSrvHttp',
-                  'DAOOficinaDataset: OficinaDAODataset' ];
- RegisterContainnerServices:= [ 'ContainnerServicosDataset:OficinaServicecontainner' ];
-
+ RegisterDAO:= ['OficinaDAOSrvHttp',
+                'OficinaDAODataset' ];
+ RegisterContainnerServices:= [ 'OficinaServicecontainner' ];
 end;
 
 procedure TOficinaModel.BeforeDestruction;
@@ -73,7 +74,8 @@ begin
    que serão alimentados pelo DAO.
    O Dao recebeu uma especialização do Tipo IDaoDataset
  }
- Result := Execute<Variant>('OficinaDAODataset','GetCars',[ ContainnerServices<TDataset>('OficinaServicecontainner') ]);
+ Result := Execute<Variant>('OficinaDAODataset','GetAll',
+           [ ContainnerServices<TDataset>('OficinaServicecontainner') ]);
  ShowMessage( Result );
 end;
 

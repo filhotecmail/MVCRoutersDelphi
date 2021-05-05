@@ -6,9 +6,13 @@ interface
 
   type TOficinaDAOHttp = class(TDaoBase,IOficinaDaoHttPServices)
   public
-    function GetData(Const ASql:String; APArams: Tarray<Variant>): IDao; overload;
+
     procedure AfterConstruction; override;
     function GetCars(const Aparam: TObject): OleVariant;
+    function GetData(const ASql: string; APArams: System.TArray<System.Variant>;
+      var ADataset: TDataSet): IDaoBase; override;
+     function ClientConfig( AConfigServiceType: RestClientAPIConfig ):IDaoRestClient;
+     function Execute( ACallBack: TProc<TRequestCallBack,TResponseCallBack> ):IDaoRestClient;
   end;
 
 implementation
@@ -17,7 +21,19 @@ implementation
 procedure TOficinaDAOHttp.AfterConstruction;
 begin
   inherited;
-   ResourceName:= GetConfig('WebServiceTeste');
+   ResourceName:= DriverManager('WebServiceTeste');
+end;
+
+function TOficinaDAOHttp.ClientConfig(
+  AConfigServiceType: RestClientAPIConfig): IDaoRestClient;
+begin
+
+end;
+
+function TOficinaDAOHttp.Execute(
+  ACallBack: TProc<TRequestCallBack, TResponseCallBack>): IDaoRestClient;
+begin
+
 end;
 
 function TOficinaDAOHttp.GetCars(const Aparam: TObject): OleVariant;
@@ -37,13 +53,14 @@ begin
 
 end;
 
-function TOficinaDAOHttp.GetData(const ASql: String;
-  APArams: Tarray<Variant>): IDao;
+
+  function TOficinaDAOHttp.GetData(const ASql: string;
+  APArams: System.TArray<System.Variant>; var ADataset: TDataSet): IDaoBase;
 begin
- Result:= (Self as IDao);
+
 end;
 
-  Initialization
+Initialization
   RegisterClassAlias(TOficinaDAOHttp,'OficinaDAOSrvHttp');
   finalization
   UnRegisterClass(TOficinaDAOHttp);

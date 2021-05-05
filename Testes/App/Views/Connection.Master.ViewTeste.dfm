@@ -78,4 +78,10 @@ object Form24: TForm24
     Left = 472
     Top = 304
   end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 472
+    Top = 376
+  end
 end

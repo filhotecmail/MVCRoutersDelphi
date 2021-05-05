@@ -1,7 +1,7 @@
 unit Model.IInterfaces;
 
 interface
- Uses System.SysUtils,System.Classes,System.Generics.Collections,Rtti;
+ Uses System.SysUtils,System.Classes,System.Generics.Collections,Rtti,Data.Db;
 
   type TFieldsNames = Array of string;
   type TFriendlyName = array of string;
@@ -13,17 +13,26 @@ interface
     FPrimaryKey: String;
     FFillable: TFieldsNames;
     FfriendName: TFriendlyName;
+    FFieldTypes: TArray<TFieldType>;
+    FRequiredFields: TArray<String>;
+    FSizeFields: TArray<Integer>;
     procedure SetFillable(const Value: TFieldsNames);
     procedure SetGenerator(const Value: String);
     procedure SetPrimaryKey(const Value: String);
     procedure SetTableName(const Value: string);
     procedure SetfriendName(const Value: TFriendlyName);
+    procedure SetFieldTypes(const Value: TArray<TFieldType>);
+    procedure SetRequiredFields(const Value: TArray<String>);
+    procedure SetSizeFields(const Value: TArray<Integer>);
   published
      property TableName: string read FTableName write SetTableName;
      property PrimaryKey: String read FPrimaryKey write SetPrimaryKey;
      property Generator: String read FGenerator write SetGenerator;
      property Fillable:TFieldsNames read FFillable write SetFillable;
+     property RequiredFields: TArray<String> read FRequiredFields write SetRequiredFields;
      property FriendName: TFriendlyName read FfriendName write SetfriendName;
+     property SizeFields: TArray<Integer> read FSizeFields write SetSizeFields;
+     property FieldTypes: TArray<TFieldType> read FFieldTypes write SetFieldTypes;
   end;
 
  type TMessagesErrorType = class
@@ -54,6 +63,11 @@ implementation
 
 { TProps }
 
+procedure TProps.SetFieldTypes(const Value: TArray<TFieldType>);
+begin
+  FFieldTypes := Value;
+end;
+
 procedure TProps.SetFillable(const Value: TFieldsNames);
 begin
   FFillable := Value;
@@ -72,6 +86,16 @@ end;
 procedure TProps.SetPrimaryKey(const Value: String);
 begin
   FPrimaryKey := Value;
+end;
+
+procedure TProps.SetRequiredFields(const Value: TArray<String>);
+begin
+  FRequiredFields := Value;
+end;
+
+procedure TProps.SetSizeFields(const Value: TArray<Integer>);
+begin
+  FSizeFields := Value;
 end;
 
 procedure TProps.SetTableName(const Value: string);

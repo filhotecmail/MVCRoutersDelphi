@@ -7,14 +7,7 @@ interface
   DataBase.Config, DataBase.Config.Types, Commom.Utils, Dao.Base,
   Dao.IInterfaces;
 
- type TRequestCallBack = reference to procedure( Req: TRESTRequest );
- type TResponseCallBack = reference to procedure( Res: TRESTResponse );
 
-  Type IDaoRestClient = Interface
-    ['{D2A488BE-0026-43EA-ADED-DEA969FD23CE}']
-     function ClientConfig( AConfigServiceType: RestClientAPIConfig ):IDaoRestClient;
-     function Execute( ACallBack: TProc<TRequestCallBack,TResponseCallBack> ):IDaoRestClient;
-  End;
 
  type
    TDaoRestClient = class Abstract( TDaoBase, IDaoRestClient)
@@ -32,13 +25,11 @@ interface
     function Execute( ACallBack: TProc<TRequestCallBack,TResponseCallBack> ):IDaoRestClient;
     function ClientConfig( AConfigServiceType: RestClientAPIConfig ):IDaoRestClient;
 
-    function GetData(const ASql: string;
-      APArams: System.TArray<System.Variant>): IDao; override;
-    function SetData: IDao; override;
-    function Cancel: IDao; override;
-    function Post: IDao; override;
-    function Edit: IDao; override;
-    function Delete(const ID: Variant): IDao; override;
+    function SetData: IDaoBase; override;
+    function Cancel: IDaoBase; override;
+    function Post: IDaoBase; override;
+    function Edit: IDaoBase; override;
+    function Delete(const ID: Variant): IDaoBase; override;
   end;
 
 implementation
@@ -56,7 +47,9 @@ begin
   FreeAndNil(RESTClient);
 end;
 
-function TDaoRestClient.Cancel: IDao;
+
+
+function TDaoRestClient.Cancel: IDaoBase;
 begin
 
 end;
@@ -74,12 +67,12 @@ begin
  end;
 end;
 
-function TDaoRestClient.Delete(const ID: Variant): IDao;
+function TDaoRestClient.Delete(const ID: Variant): IDaoBase;
 begin
 
 end;
 
-function TDaoRestClient.Edit: IDao;
+function TDaoRestClient.Edit: IDaoBase;
 begin
 
 end;
@@ -92,18 +85,13 @@ begin
 
 end;
 
-function TDaoRestClient.GetData(const ASql: string;
-  APArams: System.TArray<System.Variant>): IDao;
+
+function TDaoRestClient.Post: IDaoBase;
 begin
 
 end;
 
-function TDaoRestClient.Post: IDao;
-begin
-
-end;
-
-function TDaoRestClient.SetData: IDao;
+function TDaoRestClient.SetData: IDaoBase;
 begin
 
 end;

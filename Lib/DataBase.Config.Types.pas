@@ -6,11 +6,15 @@ interface
   type TStringArrayConfigs = array of String;
 
   type FirebirdDriverConfig= TStringArrayConfigs;
+  type PostGresDiverConfig= TStringArrayConfigs;
   type MySqlDriverConfig = TStringArrayConfigs;
+  type MariaDBDriverConfig= TStringArrayConfigs;
+  type MongoDBDriverConfig= TStringArrayConfigs;
+  type GraphQlDriverConfig= TStringArrayConfigs;
   type RestClientAPIConfig = TStringArrayConfigs;
 
   procedure AddConnections(Key: String; Value: TStringArrayConfigs);
-  function GetConfig(Key: String):TStringArrayConfigs;
+  function DriverManager(Key: String):TStringArrayConfigs;
   function PatchConfig(APatch: TStringArrayConfigs; Value: String):Variant; overload;
 
 implementation
@@ -21,7 +25,7 @@ implementation
    Result:= _ReadArrayStringSeparadorValue(APatch,Value,':');
   end;
 
-  function GetConfig(Key: String):TStringArrayConfigs;
+  function DriverManager(Key: String):TStringArrayConfigs;
   begin
    Assert(Connections.ContainsKey(Key),'Não existe uma configuração na lista com esse nome');
    result:= Connections.Items[Key];

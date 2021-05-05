@@ -4,7 +4,7 @@ interface
   uses System.Classes,System.SysUtils,System.Generics.Collections,
   Services.Containner.ObjConcrete, System.RTTI;
 
-  type TOficinaServicesContainner = class(TContainnerServices)
+  type TOficinaServicesContainner = class(TContainnerDatasetServices)
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;

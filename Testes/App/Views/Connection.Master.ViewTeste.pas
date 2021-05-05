@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,JSon, Routers.Methods,
   REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
-  REST.Authenticator.OAuth, Dao.RestClient, DataBase.Config.Types;
+  REST.Authenticator.OAuth, Dao.RestClient, DataBase.Config.Types, Data.DB,
+  Datasnap.DBClient;
 
 type
   TForm24 = class(TForm)
@@ -19,6 +20,7 @@ type
     OAuth2Authenticator1: TOAuth2Authenticator;
     OAuth1Authenticator1: TOAuth1Authenticator;
     Button1: TButton;
+    ClientDataSet1: TClientDataSet;
     procedure btn4Click(Sender: TObject);
     procedure btn5Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);

@@ -3,7 +3,9 @@ unit Model.ObjectConcrete;
 interface
 
 uses Model.IInterfaces,system.classes,system.SysUtils,Rtti, Observers.IInterfaces,
-     System.Generics.Collections, DataBase.Config.Types, Commom.Utils;
+     System.Generics.Collections, DataBase.Config.Types, Commom.Utils,
+  Services.Containner.IInterfaces,DB,Datasnap.DBClient,
+  Services.Containner.ObjConcrete,MidasLib;
 
  type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
   strict private
@@ -52,6 +54,7 @@ uses Model.IInterfaces,system.classes,system.SysUtils,Rtti, Observers.IInterface
     function Post(AParams: TArray<TValue> = nil):Variant; virtual; Abstract;
     function GetAll:Variant; virtual; Abstract;
     procedure RegisterDaos;
+    procedure CreateAsTclientDataset(AObject: TObject);
    published
     property Properties:TProps read FPropriedades write SetPropriedades;
     property SetConnection: String read FSetConnection write SetSetConnection;
@@ -216,6 +219,26 @@ begin
  //FObserver:= AObserverClass;
 end;
 
+procedure TModelAbstract.CreateAsTclientDataset(AObject: TObject);
+var
+  X: Integer;
+  Y: Integer;
+  Frequired: Boolean;
+begin
+ if (AObject is TClientDataset) then
+      begin
+        for X := Low(Properties.Fillable) to High(Properties.Fillable) do
+        begin
+         for Y := Low(Properties.RequiredFields) to High(Properties.RequiredFields) do
+           Frequired:= (Properties.RequiredFields[y] = Properties.Fillable[x]);
+
+         TClientDataset( AObject ).FieldDefs.Add( Properties.Fillable[x],
+          Properties.FieldTypes[x],Properties.SizeFields[x],Frequired );
+        end;
+         TClientDataset( AObject).CreateDataSet;
+      end;
+end;
+
 function TModelAbstract.Execute<T>(const AClassName, AMethodName: String;
   APArams: array of TValue):T;
 begin
@@ -240,38 +263,28 @@ var FClass: TPersistentClass;
     FClassObserver: TPersistentClass;
     RttiInstanceTypeObserver: TRttiInstanceType;
     RttiField: TRttiField;
+  X: Integer;
+  Y: Integer;
+  Frequired: Boolean;
 begin
   for I := Low(FRegisterContainnerServices) to High(FRegisterContainnerServices) do
   begin
-    _ReadArrayStringSeparadorAPatch( FRegisterContainnerServices,':',
-     procedure
-     ( Arg: TDictionary<String,String> )
-     var I: Integer;
-         Item: String;
-         Key: String;
-     begin
-      { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
-        acionando o método construtor.}
-       for Item in Arg.Keys do
-       begin
-        Key := Trim(Arg.Items[Item]);
-        Assert( GetClass(Key) <> nil,'Não existe um ContainnerServices registrado com o Alias '+Key  );
-
-        if not FContainnerServices.ContainsKey(Key) then
-        begin
-          FClass:= FindClass(Key);
-          RttiContext := TRttiContext.Create;
-          RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-          Instance := RttiInstanceType;
-          RttiMethod := RttiInstanceType.GetMethod('Create');
-          FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[nil]).AsObject;
-          // Vai injetar no Field da Classe base Chamado Model a instância Criada;
-          FContainnerServices.Add(Key,FObject);
-        end;
-       end;
-     end);
+  { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
+    acionando o método construtor.}
+    Assert( GetClass(FRegisterContainnerServices[i]) <> nil,'Não existe um ContainnerServices registrado com o Alias '+FRegisterContainnerServices[i]  );
+    if not FContainnerServices.ContainsKey(FRegisterContainnerServices[i]) then
+    begin
+      FClass:= FindClass(FRegisterContainnerServices[i]);
+      RttiContext := TRttiContext.Create;
+      RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
+      Instance := RttiInstanceType;
+      RttiMethod := RttiInstanceType.GetMethod('Create');
+      FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[nil]).AsObject;
+      CreateAsTclientDataset(FObject);
+      // Vai injetar no Field da Classe base Chamado Model a instância Criada;
+      FContainnerServices.Add(FRegisterContainnerServices[i],FObject);
+    end;
   end;
-
 end;
 
 function TModelAbstract.NotifyObservers: ISubject;
@@ -320,33 +333,20 @@ var FClass: TPersistentClass;
 begin
   for I := Low(FDao) to High(FDao) do
   begin
-    _ReadArrayStringSeparadorAPatch( FDao,':',
-     procedure
-     ( Arg: TDictionary<String,String> )
-     var I: Integer;
-         Item: String;
-         Key: String;
-     begin
-      { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
-        acionando o método construtor.}
-       for Item in Arg.Keys do
-       begin
-        Key := Trim(Arg.Items[Item]);
-        Assert( GetClass(Key) <> nil,'Não existe um DAO registrado com o Alias '+Key  );
-
-        if not FListDao.ContainsKey(Key) then
-        begin
-          FClass:= FindClass(Key);
-          RttiContext := TRttiContext.Create;
-          RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-          Instance := RttiInstanceType;
-          RttiMethod := RttiInstanceType.GetMethod('Create');
-          FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]).AsObject;
-          // Vai injetar no Field da Classe base Chamado Model a instância Criada;
-          FListDao.Add(Key,FObject);
-        end;
-       end;
-     end);
+  { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
+    acionando o método construtor.}
+    Assert( GetClass(FDao[i]) <> nil,'Não existe um DAO registrado com o Alias '+FDao[i]  );
+    if not FListDao.ContainsKey(FDao[i]) then
+    begin
+      FClass:= FindClass(FDao[i]);
+      RttiContext := TRttiContext.Create;
+      RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
+      Instance := RttiInstanceType;
+      RttiMethod := RttiInstanceType.GetMethod('Create');
+      FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]).AsObject;
+      // Vai injetar no Field da Classe base Chamado Model a instância Criada;
+      FListDao.Add(FDao[i],FObject);
+    end;
   end;
 end;
 

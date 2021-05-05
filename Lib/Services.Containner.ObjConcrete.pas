@@ -2,16 +2,17 @@ unit Services.Containner.ObjConcrete;
 
 interface
   uses System.Classes,System.SysUtils,System.Generics.Collections,
-  Services.Containner.IInterfaces,Data.DB,System.Rtti;
+  Services.Containner.IInterfaces,Data.DB,System.Rtti,DataSnap.DbClient;
   Type TArrayofParams = Array of TValue;
-  type TContainnerServices = class(TDataset,IServiceProvider)
+
+  type TContainnerDatasetServices = class(TClientDataset,IServiceDatasetProvider)
   private
     FDataSources: TDictionary<String,TDatasource>;
     FModel: TObject;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
-    function AddDatasources(ADatasourceName: String; ADatasource: TDatasource):TContainnerServices;
+    function AddDatasources(ADatasourceName: String; ADatasource: TDatasource):TContainnerDatasetServices;
     Function GetDatasource(ADatasourceName: String):TDatasource;
     Function Executemethod<T>(Const AMethodname: String; AMethodParams:TArrayofParams ):T;
   end;
@@ -19,25 +20,25 @@ interface
 implementation
 
 { TContainnerServices }
-function TContainnerServices.AddDatasources(ADatasourceName: String;
-  ADatasource: TDatasource): TContainnerServices;
+function TContainnerDatasetServices.AddDatasources(ADatasourceName: String;
+  ADatasource: TDatasource): TContainnerDatasetServices;
 begin
 
 end;
 
-procedure TContainnerServices.AfterConstruction;
+procedure TContainnerDatasetServices.AfterConstruction;
 begin
   inherited;
   FDataSources:= TDictionary<String,TDatasource>.create;
 end;
 
-procedure TContainnerServices.BeforeDestruction;
+procedure TContainnerDatasetServices.BeforeDestruction;
 begin
   inherited;
   FreeAndNil( FDataSources );
 end;
 
-function TContainnerServices.Executemethod<T>(const AMethodname: String;
+function TContainnerDatasetServices.Executemethod<T>(const AMethodname: String;
   AMethodParams: TArrayofParams): T;
 var  RttiContext: TRttiContext;
      RttiInstanceType: TRttiInstanceType;
@@ -57,7 +58,7 @@ begin
   end;
 end;
 
-function TContainnerServices.GetDatasource(ADatasourceName: String): TDatasource;
+function TContainnerDatasetServices.GetDatasource(ADatasourceName: String): TDatasource;
 begin
 
 end;
