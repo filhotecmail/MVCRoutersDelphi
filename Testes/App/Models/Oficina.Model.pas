@@ -37,8 +37,10 @@ begin
   FriendName:= [ 'Id','Nome ou razão social do cliente' ];
   FieldTypes:= [ ftInteger,ftString ];
  end;
+
  RegisterDAO:= ['OficinaDAOSrvHttp',
                 'OficinaDAODataset' ];
+
  RegisterContainnerServices:= [ 'OficinaServicecontainner' ];
 end;
 
@@ -68,12 +70,8 @@ end;
 
 function TOficinaModel.GetAll: Variant;
 begin
- // Vai entrar o Business Core Baseado em TDataset
- {
-   O Model Delega aum Serviço a sua responsabilidade de manipular os Objetos
-   que serão alimentados pelo DAO.
-   O Dao recebeu uma especialização do Tipo IDaoDataset
- }
+ {O Model Delega aum Serviço a sua responsabilidade de manipular os Objetos
+   que serão alimentados pelo DAO.O Dao recebeu uma especialização do Tipo IDaoDataset}
  Result := Execute<Variant>('OficinaDAODataset','GetAll',
            [ ContainnerServices<TDataset>('OficinaServicecontainner') ]);
  ShowMessage( Result );
