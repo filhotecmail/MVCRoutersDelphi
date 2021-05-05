@@ -58,14 +58,13 @@ end;
 
 function TOficinaModel.Getstr(AParams: String): TValue;
 begin
- Result := '{"Data":"Teste"}';
+
 end;
 
 function TOficinaModel.Get(AParams: System.TArray<TValue>): Variant;
 begin
- Result := '{"Data":"Teste"}';
- {Verificar na lista de Containners de serviços se existe algum containner registrado para esse model
-  se existir o sistema irá enviar o resultado para o Containner de serviços }
+
+
 end;
 
 function TOficinaModel.GetAll: Variant;
