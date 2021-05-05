@@ -5,7 +5,7 @@ interface
 uses Model.IInterfaces,system.classes,system.SysUtils,Rtti, Observers.IInterfaces,
      System.Generics.Collections, DataBase.Config.Types, Commom.Utils,
   Services.Containner.IInterfaces,DB,Datasnap.DBClient,
-  Services.Containner.ObjConcrete,MidasLib;
+  Services.Containner.ObjConcrete,MidasLib, Commom.RTTI.Utils;
 
  type TModelAbstract = class Abstract(TInterfacedPersistent,IModel,ISubject)
   strict private
@@ -25,7 +25,7 @@ uses Model.IInterfaces,system.classes,system.SysUtils,Rtti, Observers.IInterface
     procedure SetPropriedades(const Value: TProps);
     procedure SetSetConnection(const Value: String);
     procedure SetDao(const Value: TArray<String>);
-    procedure SetRegisterContainnerServices(const Value: TArray<String>);
+
   public
     Constructor Create(AOwner: TObject; AObserverClass: TCLass); virtual;
 
@@ -59,10 +59,12 @@ uses Model.IInterfaces,system.classes,system.SysUtils,Rtti, Observers.IInterface
     property Properties:TProps read FPropriedades write SetPropriedades;
     property SetConnection: String read FSetConnection write SetSetConnection;
     property RegisterDAO: TArray<String> read FDao write SetDao;
-    property RegisterContainnerServices: TArray<String> read FRegisterContainnerServices write SetRegisterContainnerServices;
+    procedure RegisterContainnerServices( const Value: TArray<String>;
+              AParamsConstructor:  Tarray<TArrayOfParams>);
+
     function ContainnerServices<T>(Const AContainnerName: String):T;
     function Execute<T>(Const AClassName: String; Const AMethodName: String; APArams: Array of TValue ):T;
-    procedure InternalregisterContainnerServices;
+    procedure InternalregisterContainnerServices(AParamsConstructor:  TArray<TArrayOfParams>);
     procedure FreeListObjects;
   end;
 
@@ -250,41 +252,22 @@ begin
 
 end;
 
-procedure TModelAbstract.InternalregisterContainnerServices;
-var FClass: TPersistentClass;
-    FObject: TObject;
-    RttiContext: TRttiContext;
-    RttiInstanceType: TRttiInstanceType;
-    RttiMethod: TRttiMethod;
-    Instance: TValue;
-    I: Integer;
-    FObserversClass: TPersistentClass;
-    RttiContextObserver: TRttiContext;
-    FClassObserver: TPersistentClass;
-    RttiInstanceTypeObserver: TRttiInstanceType;
-    RttiField: TRttiField;
-  X: Integer;
-  Y: Integer;
-  Frequired: Boolean;
+procedure TModelAbstract.InternalregisterContainnerServices(AParamsConstructor:  TArray<TArrayOfParams>);
+var I: Integer;
 begin
   for I := Low(FRegisterContainnerServices) to High(FRegisterContainnerServices) do
+      Assert( GetClass(FRegisterContainnerServices[I]) <> nil,
+      Format('Não existe um ContainnerServices registrado com o Alias %s ',
+      [FRegisterContainnerServices[I]]));
+
+  TLib.CreateFromRTTI(FRegisterContainnerServices,AParamsConstructor,FContainnerServices,
+  procedure
+  ( AObject: TObject )
   begin
   { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
-    acionando o método construtor.}
-    Assert( GetClass(FRegisterContainnerServices[i]) <> nil,'Não existe um ContainnerServices registrado com o Alias '+FRegisterContainnerServices[i]  );
-    if not FContainnerServices.ContainsKey(FRegisterContainnerServices[i]) then
-    begin
-      FClass:= FindClass(FRegisterContainnerServices[i]);
-      RttiContext := TRttiContext.Create;
-      RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-      Instance := RttiInstanceType;
-      RttiMethod := RttiInstanceType.GetMethod('Create');
-      FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[nil]).AsObject;
-      CreateAsTclientDataset(FObject);
-      // Vai injetar no Field da Classe base Chamado Model a instância Criada;
-      FContainnerServices.Add(FRegisterContainnerServices[i],FObject);
-    end;
-  end;
+   acionando o método construtor.}
+  CreateAsTclientDataset(AObject);
+  end);
 end;
 
 function TModelAbstract.NotifyObservers: ISubject;
@@ -374,12 +357,12 @@ begin
   FPropriedades := Value;
 end;
 
-procedure TModelAbstract.SetRegisterContainnerServices(
-  const Value: TArray<String>);
+procedure TModelAbstract.RegisterContainnerServices(
+  const Value: TArray<String>; AParamsConstructor:  Tarray<TArrayOfParams>);
 begin
   FRegisterContainnerServices := Value;
   // Registra Containers de Serviços para o Modelo
-  InternalregisterContainnerServices;
+  InternalregisterContainnerServices(AParamsConstructor);
 end;
 
 procedure TModelAbstract.SetSetConnection(const Value: String);

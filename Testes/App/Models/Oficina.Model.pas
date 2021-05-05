@@ -3,7 +3,7 @@ unit Oficina.Model;
 interface
 
 uses Model.IInterfaces, Model.ObjectConcrete,System.SysUtils,System.Generics.Defaults,Rtti,
-     System.Classes,Vcl.Dialogs,Data.DB;
+     System.Classes,Vcl.Dialogs,Data.DB, Commom.RTTI.Utils;
 
   Type
      TOficinaModel = Class(TModelAbstract)
@@ -41,7 +41,7 @@ begin
  RegisterDAO:= ['OficinaDAOSrvHttp',
                 'OficinaDAODataset' ];
 
- RegisterContainnerServices:= [ 'OficinaServicecontainner' ];
+ RegisterContainnerServices( [ 'OficinaServicecontainner' ],[ ParValues([nil]) ]);
 end;
 
 procedure TOficinaModel.BeforeDestruction;

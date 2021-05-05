@@ -3,9 +3,8 @@ unit Controller.ConcreteObj;
 interface
   uses System.classes,Controller.IInterfaces,Rtti,Vcl.Forms,System.SysUtils,
   Model.ObjectConcrete, Model.IInterfaces,System.Generics.Collections,
-  Observers.IInterfaces, View.Abstract, Services.Containner.ObjConcrete;
-
-  type TArrayOfParams = Array of TValue;
+  Observers.IInterfaces, View.Abstract, Services.Containner.ObjConcrete,
+  Commom.RTTI.Utils;
 
 type TControllerBase = Class Abstract(TInterfacedPersistent,IController)
   strict private
@@ -113,31 +112,9 @@ begin
 end;
 
 function TControllerBase.Models(AModelsNames: TArray<String>; AParamsConstructor: TArray<TArrayOfParams>): TControllerBase;
-var FClass: TPersistentClass;
-    FObject: TObject;
-    RttiContext: TRttiContext;
-    RttiInstanceType: TRttiInstanceType;
-    RttiMethod: TRttiMethod;
-    Instance: TValue;
-    I,X: Integer;
-  FObserversClass: TPersistentClass;
-  RttiContextObserver: TRttiContext;
-  FClassObserver: TPersistentClass;
-  RttiInstanceTypeObserver: TRttiInstanceType;
-
 begin
  Result := Self;
- for I := Low(AModelsNames) to High(AModelsNames) do
-  if not FModels.ContainsKey(AModelsNames[I]) then
-  begin
-    FClass:= FindClass(AModelsNames[I]);
-    RttiContext := TRttiContext.Create;
-    RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-    Instance := RttiInstanceType;
-    RttiMethod := RttiInstanceType.GetMethod('Create');
-    FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructor[I]).AsObject;
-    FModels.Add(AModelsNames[i],FObject);
-   end;
+  TLib.CreateFromRTTI(AModelsNames,AParamsConstructor,FModels);
 end;
 
 function TControllerBase.OBServers(
@@ -156,18 +133,9 @@ end;
 
 function TControllerBase.ContainnersServices(AContainnerServiceName,
   AModels: TArray<String>; AParamsConstructorContainner: TArray<TArrayOfParams>): TValue;
-var FClass: TPersistentClass;
-    FObject: TObject;
-    RttiContext: TRttiContext;
-    RttiInstanceType: TRttiInstanceType;
-    RttiMethod: TRttiMethod;
-    Instance: TValue;
-    I,X: Integer;
-  FObserversClass: TPersistentClass;
-  RttiContextObserver: TRttiContext;
-  FClassObserver: TPersistentClass;
-  RttiInstanceTypeObserver: TRttiInstanceType;
-  RttiField: TRttiField;
+ var I: Integer;
+     FItem: String;
+     FParams: TArray<TArrayOfParams>;
 begin
  Result := Self;
  {Verificar na Lista de Models se existe um Modelo registrado com os nomes passados no Array
@@ -182,40 +150,29 @@ begin
   }
   for I := Low(AContainnerServiceName) to High(AContainnerServiceName) do
   begin
+   FItem:= AContainnerServiceName[i];
+   FParams:= AParamsConstructorContainner;
    Assert(FModels.ContainsKey(AModels[i]),'Não existe um Model de nome .: '+AModels[i]+' para Containner registrado');
-   Assert( GetClass(AContainnerServiceName[i]) <> nil,'Não existe um Containner registrado com o Alias '+AContainnerServiceName[i]  );
-
-   if not FContainnersServices.ContainsKey(AContainnerServiceName[i]) then
+   Assert( GetClass(FItem) <> nil,'Não existe um Containner registrado com o Alias '+FItem  );
+   if not FContainnersServices.ContainsKey(FItem) then
    begin
-    FClass:= FindClass(AContainnerServiceName[I]);
-    RttiContext := TRttiContext.Create;
-    RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
-    Instance := RttiInstanceType;
-    RttiMethod := RttiInstanceType.GetMethod('Create');
-    FObject := RttiMethod.Invoke(RttiInstanceType.MetaclassType,AParamsConstructorContainner[I]).AsObject;
     // Vai injetar no Field da Classe base Chamado Model a instância Criada;
-    RttiField:= RttiInstanceType.GetField('FModel');
-    RttiField.SetValue(FObject,FModels.Items[AModels[i]]);
-    FContainnersServices.Add(AContainnerServiceName[I],FObject);
-    FContainnerServicesModel.AddOrSetValue(AContainnerServiceName[i], FModels.Items[AModels[i]]);
+    TLib.CreateFromRTTI(FItem,FParams[i],
+    procedure
+    ( Aobject: TObject; RttiField: TFieldLibRtti; RttiInstanceType: TInstanceLibRtti )
+    begin
+     RttiField:= RttiInstanceType.GetField('FModel');
+     RttiField.SetValue(Aobject,FModels.Items[AModels[i]]);
+     FContainnersServices.Add(FItem,Aobject);
+     FContainnerServicesModel.AddOrSetValue(FItem, FModels.Items[AModels[i]]);
+    end);
    end;
   end;
 end;
  function TControllerBase.ExcuteMethod<T>(AInstance: TObject; AMethodName: String;
   AmethodParams: array of TValue): T;
-var  RttiContext: TRttiContext;
-     RttiInstanceType: TRttiInstanceType;
-     RttiMethod: TRttiMethod;
-     InstanceOf: TValue;
-     FValue: TValue;
 begin
-  RttiContext := TRttiContext.Create;
-  RttiInstanceType := RttiContext.FindType(AInstance.UnitName+'.'+AInstance.ClassName).AsInstance;
-  RttiMethod := RttiInstanceType.GetMethod(AMethodName);
-  InstanceOf:= RttiInstanceType.MetaclassType;
- if RttiMethod <> nil then
-   FValue:= RttiMethod.Invoke( AInstance , AmethodParams);
-   Result:= FValue.AsType<T>;
+ Result:= TLib.ExecuteMethod<T>(AInstance,AMethodName,AmethodParams);
 end;
 
 {$ENDREGION}
