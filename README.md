@@ -371,6 +371,12 @@ Recuperando um Containenr de serviços atraves do model, utilizando a Chamada do
 ```Delphi
    Execute<Variant>('OficinaDAODataset','GetAll', [ ContainnerServices<TDataset>('OficinaServicecontainner') ])
 ```
+O Método ContainnerServices<T>, recupera um Containner de serviços registrados pelo Model , o containner de serviços pode herdar e ter especializações e regras de negócios proprias, removendo do Model toda a regra de negócio. Podemos ter varios containners services para cada Situação que assim exigir.
+
+```Delphi
+ContainnerServices<TDataset>('OficinaServicecontainner')
+```
+
 
 # Drivermanager
  Seguindo o modelo ja conhecido do Java e outras tecnologias , assim como Laravel, o framework irá te entregar uma unidade chamada [  DataBase.Config  ]
