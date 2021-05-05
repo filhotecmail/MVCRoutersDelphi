@@ -359,24 +359,17 @@ Mais sobre os services Containners.
 https://laravel.com/docs/8.x/container
 
 ```Delphi
-implementation
-{ TOficinaInformatica }
-procedure TOficinaInformatica.AfterConstruction;
+procedure TOficinaModel.AfterConstruction;
 begin
- inherited;
-  {registra na Lista os Models que o controller irá realizar uma conversa}
-  Models(['Oficina'],[ [Self,nil] ]);
- {Registra os containners services da aplicação da aplicação, caso o controller não realize chamadas diretas ao modelo}
-  ContainnersServices(['OficinaServicecontainner'],['Oficina'],['New'],[ [] ]);
+ RegisterContainnerServices:= [ 'OficinaServicecontainner' ];
 end;
 
 ```
 
-Recuperando um Containenr de serviços.
+Recuperando um Containenr de serviços atraves do model, utilizando a Chamada do Méthodo Execute<T>.
 
 ```Delphi
-  {Recupera dentro de uma Lista de containners registrados}
-  GetContainnersServices<String>('OficinaServicecontainner','Get',[  ])
+   Execute<Variant>('OficinaDAODataset','GetAll', [ ContainnerServices<TDataset>('OficinaServicecontainner') ])
 ```
 
 # Drivermanager
