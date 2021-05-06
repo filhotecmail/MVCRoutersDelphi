@@ -26,8 +26,6 @@ type
     procedure BeforeDestruction; override;
   end;
 
-function ArgsArr(Arg: TArrayOfParams): TArrayOfParams;
-
 implementation
 
 var
@@ -39,11 +37,6 @@ var
   RttiField: TFieldLibRtti;
 
 { TLib }
-
-function ArgsArr(Arg: TArrayOfParams): TArrayOfParams;
-begin
-  result := TValue.from(Arg).AsType<TArrayOfParams>;
-end;
 
 procedure TLib.AfterConstruction;
 begin

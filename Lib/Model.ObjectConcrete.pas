@@ -264,8 +264,8 @@ begin
   TLib.CreateFromRTTI(FRegisterContainnerServices, AParamsConstructor, FContainnerServices,
     procedure (AObject: TObject)
     begin
-  { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
-   acionando o método construtor.}
+     { Dentro do Dicionário de dados o sistema irá criar as instâncias dos Dao´s informados
+        acionando o método construtor.}
       CreateAsTclientDataset(AObject);
     end);
 end;

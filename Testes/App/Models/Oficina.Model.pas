@@ -1,4 +1,4 @@
-Ôªøunit Oficina.Model;
+unit Oficina.Model;
 
 interface
 
@@ -34,12 +34,11 @@ begin
   Fillable  := ['ID','NOME'];
   RequiredFields:= ['ID'];
   SizeFields:= [0,60];
-  FriendName:= [ 'Id','Nome ou raz√£o social do cliente' ];
+  FriendName:= [ 'Id','Nome ou raz„o social do cliente' ];
   FieldTypes:= [ ftInteger,ftString ];
  end;
-
- RegisterDAOs(['OficinaDAOSrvHttp','OficinaDAODataset' ],[ ParValues([nil]),parValues([nil]) ]);
- RegisterContainnerServices( [ 'OficinaServicecontainner' ],[ ParValues([nil]) ]);
+ RegisterDAOs(['OficinaDAOSrvHttp','OficinaDAODataset' ],[ [ nil ], [ nil ] ]);
+ RegisterContainnerServices( [ 'OficinaServicecontainner' ],[ [ nil ] ]);
 end;
 
 procedure TOficinaModel.BeforeDestruction;
@@ -67,8 +66,8 @@ end;
 
 function TOficinaModel.GetAll: Variant;
 begin
- {O Model Delega aum Servi√ßo a sua responsabilidade de manipular os Objetos
-   que ser√£o alimentados pelo DAO.O Dao recebeu uma especializa√ß√£o do Tipo IDaoDataset}
+ {O Model Delega aum ServiÁo a sua responsabilidade de manipular os Objetos
+   que ser„o alimentados pelo DAO.O Dao recebeu uma especializaÁ„o do Tipo IDaoDataset}
  Result := Execute<Variant>('OficinaDAODataset','GetAll',
            [ ContainnerServices<TDataset>('OficinaServicecontainner') ]);
  ShowMessage( Result );
