@@ -3,6 +3,8 @@ unit Commom.Utils;
 interface
  uses  Classes,SysUtils,vcl.Dialogs,System.Generics.Collections,System.Generics.Defaults,RTTI,System.VarUtils,System.TypInfo,System.Variants;
 
+  type TFieldsNamesArray = Array of String;
+
   function _ReadArrayStringSeparadorValue(APatch: Array of String; AKeyName: String; CharSeparador: String):Variant;
   function _ReadArrayStringSeparadorAPatch(APatch: Array of String; Const
   CharSeparador: String; ACallBack: TProc<TDictionary<String,String>>):TDictionary<String,String>;
