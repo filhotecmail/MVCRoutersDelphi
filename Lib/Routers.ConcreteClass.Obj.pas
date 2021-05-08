@@ -47,12 +47,10 @@ interface
     FAMiddlewares: TArray<String>;
     FAgroupName: String;
     FMethods: TDictionary<String, TMethodsClass>;
-    FMethodsAlias: TDictionary<String, TMethodsClass>;
     FAMethodsExceptThisMiddleware: TDictionary<String, TMethodsClass>;
     procedure SetAgroupName(const Value: String);
     procedure SetAMiddlewares(const Value: TArray<String>);
     procedure SetMethods(const Value: TDictionary<String, TMethodsClass>);
-    procedure SetMethodsAlias(const Value: TDictionary<String, TMethodsClass>);
     procedure SetAMethodsExceptThisMiddleware(
       const Value: TDictionary<String, TMethodsClass>);
   public
@@ -63,7 +61,6 @@ interface
     property AMiddlewares: TArray<String> read FAMiddlewares write SetAMiddlewares;
     property AMethodsExceptThisMiddleware: TDictionary<String,TMethodsClass> read FAMethodsExceptThisMiddleware write SetAMethodsExceptThisMiddleware;
     property Methods: TDictionary<String,TMethodsClass> read FMethods write SetMethods;
-    property MethodsAlias: TDictionary<String,TMethodsClass> read FMethodsAlias write SetMethodsAlias;
   end;
 
   Type TGroupRoute = class
@@ -79,14 +76,12 @@ interface
 
   Type TControllersRoute = class
   Type TConstructorParams = Array of TValue;
-
   strict private
     FviewName: string;
    private
     FControllersForView: TDictionary<TControllerName,TPersistentClass>;
     FControllerName: STring;
     FControllerObj: TPersistentClass;
-
   private
     FListaGrupos: TDictionary<String,TGroupRoute>;
     function Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
@@ -102,7 +97,6 @@ interface
              Method: String; AParams: Array of TValue;
              AMidleWareNames: TMidlewares = nil;
              const AMethodAlias: String = ''; ARouteType: TRouterType = AController ):TValue; overload;
-
     /// <summary>
     ///  Recupera a Lista de Grupos
     /// </summary>
@@ -113,7 +107,6 @@ interface
     /// </summary>
     function RegisterGroup( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass> ):TControllersRoute; overload;
     function RegisterGroup( AGroupName: String; AMiddlewares: TArray<String>;  ARouters: TArray<TMethodsClass>; AExceptThis: TArray<TMethodsClass>):TControllersRoute; overload;
-
     function FreeRoute(const AClassName: String):TControllersRoute;
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -123,8 +116,6 @@ interface
 
  var RoutersController:TControllersRoute;
  implementation
-
-uses Controller.ConcreteObj;
 
   var FRoutersInstance:  TDictionary<String,TValue>;
 
@@ -139,11 +130,27 @@ begin
 end;
 
 procedure TControllersRoute.BeforeDestruction;
+var LKey: String;
+    FObject: TObject;
 begin
   inherited;
   FreeAndNil( FControllersForView );
+
+  for LKey in FRoutersInstance.Keys do
+  begin
+   FObject:= FRoutersInstance.items[LKey].AsObject;
+   FreeAndNil(FObject);
+  end;
+
+ for LKey in FListaGrupos.Keys do
+ begin
+  FObject:= FListaGrupos.Items[LKey];
+  FreeAndNil(FObject);
+ end;
+
   if Assigned(FRoutersInstance) then
   FreeAndNil( FRoutersInstance );
+
   FreeAndNil( FListaGrupos );
 end;
 
@@ -275,7 +282,6 @@ function TControllersRoute.Execute(const AClassName: String; Method: String; APa
      RttiContext: TRttiContext;
      RttiInstanceType: TRttiInstanceType;
      RttiMethod: TRttiMethod;
-     Instance: TValue;
 begin
   FClass:= FindClass(AClassName);
   RttiContext := TRttiContext.Create;
@@ -283,12 +289,14 @@ begin
   RttiMethod := RttiInstanceType.GetMethod(Method);
   if AConstrutor then
  begin
-    Instance := RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]);
   if not FRoutersInstance.ContainsKey(AClassName) then
-         FRoutersInstance.AddOrSetValue(AClassName,Instance);
- end;
-  Instance:= RttiInstanceType.MetaclassType;
+         FRoutersInstance.AddOrSetValue(AClassName,RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]));
+   result:= FRoutersInstance.Items[AClassName].AsObject;
+ end else
+ begin
+  result:= RttiInstanceType.MetaclassType;
   Result:= RttiMethod.Invoke( FRoutersInstance.Items[AClassName] , AParams);
+ end;
 end;
 
 function TControllersRoute.FreeRoute(const AClassName: String): TControllersRoute;
@@ -338,8 +346,15 @@ begin
 end;
 
 procedure TGroupRoute.BeforeDestruction;
+ var FKeys: String;
+     Fobject: TObject;
 begin
   inherited;
+  for FKeys in FListGroups.Keys do
+  begin
+    Fobject:= FListGroups.Items[FKeys];
+    FreeAndNil( Fobject );
+  end;
   FreeAndNil( FListGroups );
 end;
 
@@ -389,6 +404,8 @@ begin
 end;
 
 procedure TGroupobjects.BeforeDestruction;
+ var FKeys: String;
+     FObjects: TObject;
 begin
  inherited;
  FreeAndNil( FMethods );
@@ -414,12 +431,6 @@ end;
 procedure TGroupobjects.SetMethods(const Value: TDictionary<String, TMethodsClass>);
 begin
   FMethods := Value;
-end;
-
-procedure TGroupobjects.SetMethodsAlias(
-  const Value: TDictionary<String, TMethodsClass>);
-begin
-  FMethodsAlias := Value;
 end;
 
 { TRoutermethods }

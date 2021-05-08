@@ -2,7 +2,7 @@ unit Routers.Methods;
 
 interface
 
-uses Rtti, Routers.ConcreteClass.Obj;
+uses Rtti, Routers.ConcreteClass.Obj, System.SysUtils;
 
  function Construtor( Const ABuildMethodType: TMethodsClass ): TMethodsClass;
 
@@ -52,9 +52,20 @@ uses Rtti, Routers.ConcreteClass.Obj;
  ARouters: TArray<TMethodsClass>; ExceptThis: TArray<TMethodsClass> ):TControllersRoute; overload;
  // invoka um Método que pertence a um grupo de rotas
  function Group(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue):TValue;
+ procedure FreeRouters;
 
 implementation
 { TControllersRoute }
+
+   var _TMethodsClassGroupPoinetrRegistred: TArray<TMethodsClass>;
+
+ procedure FreeRouters;
+var
+  I: Integer;
+ begin
+   for I := Low(_TMethodsClassGroupPoinetrRegistred) to High(_TMethodsClassGroupPoinetrRegistred) do
+   FreeAndNil( _TMethodsClassGroupPoinetrRegistred[i] );
+ end;
 
 function RegisterGroup(AGroupName: String;AMiddlewares: TArray<String>;
  ARouters: TArray<TMethodsClass>; ExceptThis: TArray<TMethodsClass> ):TControllersRoute;
@@ -83,18 +94,20 @@ end;
 function Controller(AControllerAlias: String;Method: String; const AParams: Array of TValue;
   AMidleWareNames: TMidlewares = nil; const AMethodAlias: String = '';
   ARouteType: TRouterType = AController): TMethodsClass;
- var FMethodClass:TMethodsClass;
-     I: Integer;
+  var I: Integer;
 begin
  // Cria o Objeto de Metodos registrados para gravar no grupo
- FMethodClass:= TMethodsClass.Create;
- FMethodClass.AClassName := AControllerAlias;
- FMethodClass.MethodName := Method;
- FMethodClass.MethodAlias:= AMethodAlias;
- FMethodClass.RouterType := ARouteType;
+ Result:= TMethodsClass.Create;
+ Result.AClassName := AControllerAlias;
+ Result.MethodName := Method;
+ Result.MethodAlias:= AMethodAlias;
+ Result.RouterType := ARouteType;
+
  for I := Low(AParams) to High(AParams) do
-  FMethodClass.AddParam(AParams[i],I);
- Result:=  FMethodClass;
+  Result.AddParam(AParams[i],I);
+
+  Insert(result,_TMethodsClassGroupPoinetrRegistred,length(_TMethodsClassGroupPoinetrRegistred)+1);
+
 end;
 
 function RegisterGroup(AGroupName: String;
@@ -105,5 +118,5 @@ end;
  Initialization
   RoutersController := TControllersRoute.Create;
  Finalization
-
+//  FreeAndNil(RoutersController);
 end.
