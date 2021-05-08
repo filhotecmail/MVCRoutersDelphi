@@ -6,7 +6,7 @@ interface
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
   FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, Data.DB, FireDAC.Comp.Client,Rtti,
   System.Generics.Collections,System.Generics.Defaults, Json,Vcl.Forms,
-  Routers.Middleware.Abstract,Vcl.Dialogs;
+  Routers.Middleware.Abstract,Vcl.Dialogs,Threading;
 
   type TControllerName=  String;
   type TInstanceName = String;
@@ -273,6 +273,7 @@ begin
    if Assigned(AMiddleCallBack.ACallBackValue) then
       AMiddleCallBack.ACallBackValue(FValue);
   end);
+  Result :=  FValue;
 end;
 
 function TControllersRoute.Execute(const AClassName: String; Method: String; AParams: Array of TValue; AConstrutor: Boolean;
@@ -287,15 +288,19 @@ begin
   RttiContext := TRttiContext.Create;
   RttiInstanceType := RttiContext.FindType(FClass.UnitName+'.'+FClass.ClassName).AsInstance;
   RttiMethod := RttiInstanceType.GetMethod(Method);
-  if AConstrutor then
- begin
+ // Se não estiver na lista , vai acionar o método Constructor Create da classe
   if not FRoutersInstance.ContainsKey(AClassName) then
-         FRoutersInstance.AddOrSetValue(AClassName,RttiMethod.Invoke(RttiInstanceType.MetaclassType,[]));
-   result:= FRoutersInstance.Items[AClassName].AsObject;
- end else
- begin
+         FRoutersInstance.AddOrSetValue(AClassName,RttiInstanceType.GetMethod('Create').Invoke(RttiInstanceType.MetaclassType,[]));
+
+  result:= FRoutersInstance.Items[AClassName].AsObject;
+  FObject:= FRoutersInstance.Items[AClassName].AsObject;
   result:= RttiInstanceType.MetaclassType;
+ try
   Result:= RttiMethod.Invoke( FRoutersInstance.Items[AClassName] , AParams);
+ finally
+  FRoutersInstance.Remove(AClassName);
+    if Assigned(FObject) then
+      FreeAndNil( FObject );
  end;
 end;
 
@@ -362,7 +367,7 @@ function TGroupRoute.Execute(AGroupName: String;AMethodName: String; AMethodPara
  var I: Integer;
      FValue: TValue;
 begin
- Result:= FValue;
+
  Assert( FListGroups.ContainsKey(AGroupName),'Não existe um Grupo com esse objeto' );
  Assert(FListGroups.Items[AGroupName].Methods.ContainsKey(AMethodName) or
         FListGroups.Items[AGroupName].FAMethodsExceptThisMiddleware.ContainsKey(AMethodName), 'Não existe um Método no grupo');
@@ -383,7 +388,7 @@ begin
       AMiddleCallBack.ACallBackValue(FValue);
    end);
   end;
-
+   Result:= FValue;
 end;
 
 function TGroupRoute.GetinList(AGroupName: String;AMethodName: String; AMethodParams: Array of TValue): TGroupobjects;
